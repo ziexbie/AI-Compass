@@ -10,12 +10,13 @@
   },
   "dependencies": {
     "@tabler/icons-react": "^3.31.0",
-    "axios": "^1.8.2",
+    "axios": "^1.8.4",
     "formik": "^2.4.6",
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
+    "styled-components": "^6.1.17",
     "yup": "^1.6.1"
   },
   "devDependencies": {
