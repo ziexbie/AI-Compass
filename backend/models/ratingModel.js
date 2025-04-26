@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require('../connection');
 
-const ratingSchema = new mongoose.Schema({
+const ratingSchema = new Schema({
   toolId: { type: mongoose.Schema.Types.ObjectId, ref: "Tool", required: true },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   rating: { type: Number, required: true },
@@ -8,4 +8,4 @@ const ratingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model("Rating", ratingSchema);
+module.exports = model("Ratings", ratingSchema);

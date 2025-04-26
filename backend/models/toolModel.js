@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require('../connection');
 
-const toolSchema = new mongoose.Schema({
+const toolSchema = new Schema({
   name: { type: String, required: true },
   description: String,
   category: String,
@@ -9,4 +9,4 @@ const toolSchema = new mongoose.Schema({
   logo: String
 });
 
-module.exports = mongoose.model("Tool", toolSchema);
+module.exports = model("Tools", toolSchema);

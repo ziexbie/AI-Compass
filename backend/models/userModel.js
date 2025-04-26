@@ -1,7 +1,7 @@
-const {Schema, model} = require('../connection');
- 
+const { Schema, model } = require('../connection');
+
 const userSchema = new Schema({
-    username: {
+    name: {
         type: String,
         required: true
     },
@@ -14,13 +14,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    city: {
-        type: String,
-        default: "NoCity"},
     createdAt: {
         type: Date,
         default: Date.now
     },
 });
 
-module.exports = model('User', userSchema);
+module.exports = model('Users', userSchema);

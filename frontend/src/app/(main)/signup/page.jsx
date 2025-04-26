@@ -1,237 +1,289 @@
 'use client';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import React from 'react';
-import styled from 'styled-components';
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
+import React from 'react';
+import toast from 'react-hot-toast';
+import * as Yup from 'yup';
+
 
 const SignupSchema = Yup.object().shape({
-  username: Yup.string().required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().min(8, 'Password must be at least 8 characters').required('Required'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Required'),
+    name: Yup.string().min(2, 'Too Short..!').max(50, 'Too Long!').required('Required'),
+    email: Yup.string().email('Invalid email').required('Required'),
+    password: Yup.string().min(7, 'Password is too short').required('Required'),
+    confirmPassword: Yup.string().required('Required').oneOf([Yup.ref('password'), null], 'Passwords must match'),
 });
 
-const FormSignup = () => {
 
-  const router = useRouter();
+const Signup = () => {
 
-  const signupForm = useFormik({
-    initialValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
-    validationSchema: SignupSchema,
-    onSubmit: (values, { resetForm }) => {
-      axios.post('http://localhost:5000/user/add', values)
-        .then((result) => {
-          console.log(result.data);
-            toast.success('User Created Successfully');
-          
-          router.push('/login');
-          resetForm();
+    const router = useRouter();
 
+    const signupForm = useFormik({
+        initialValues: {
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+        },
+        onSubmit: (values, { resetForm }) => {
+            axios.post('http://localhost:5000/user/add', values)
+                .then((result) => {
+                    toast.success('User Created Successfully !!')
+                    resetForm();
+                    router.push('/login');
+                }).catch((err) => {
+                    console.log(err);
+                    toast.error('Something went wrong !!')
+                });
+        },
+        validationSchema: SignupSchema,
+    })
 
-        }).catch((err) => {
-          console.log(err);
-          toast.error('Something went wrong!!');
-        });
-    },
-  });
-  return (
-    <StyledWrapper>
-      <div className="card">
-        <div className="card2">
-          <form className="form" onSubmit={signupForm.handleSubmit}>
-            <p id="heading">Sign Up</p>
-            <div className="field">
-              <svg viewBox="0 0 16 16" fill="currentColor" height={16} width={16} xmlns="http://www.w3.org/2000/svg" className="input-icon">
-                <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z" />
-              </svg>
-              <input type="text" name='username' id='username' onChange={signupForm.handleChange} value={signupForm.values.username} className="input-field" placeholder="Username" autoComplete="off" />
-              <div>{signupForm.touched.username && signupForm.errors.username && (
-                <p className="text-xs text-red-600 mt-2">{signupForm.errors.username}</p>
-              )}</div>
+    return (
+        <div className='mx-auto flex items-center justify-center min-h-screen bg-gray-50'>
+            <div className="mt-7 bg-white border border-gray-200 rounded-xl w-[30%] shadow-2xs">
+                <div className="p-4 sm:p-7">
+                    <div className="text-center">
+                        <h1 className="block text-2xl font-bold text-gray-800">Sign up</h1>
+                        <p className="mt-2 text-sm text-gray-600">
+                            Already have an account?
+                            <a
+                                className="text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
+                                href="../examples/html/signin.html"
+                            >
+                                Sign in here
+                            </a>
+                        </p>
+                    </div>
+                    <div className="mt-5">
+                        <button
+                            type="button"
+                            className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                        >
+                            <svg
+                                className="w-4 h-auto"
+                                width={46}
+                                height={47}
+                                viewBox="0 0 46 47"
+                                fill="none"
+                            >
+                                <path
+                                    d="M46 24.0287C46 22.09 45.8533 20.68 45.5013 19.2112H23.4694V27.9356H36.4069C36.1429 30.1094 34.7347 33.37 31.5957 35.5731L31.5663 35.8669L38.5191 41.2719L38.9885 41.3306C43.4477 37.2181 46 31.1669 46 24.0287Z"
+                                    fill="#4285F4"
+                                />
+                                <path
+                                    d="M23.4694 47C29.8061 47 35.1161 44.9144 39.0179 41.3012L31.625 35.5437C29.6301 36.9244 26.9898 37.8937 23.4987 37.8937C17.2793 37.8937 12.0281 33.7812 10.1505 28.1412L9.88649 28.1706L2.61097 33.7812L2.52296 34.0456C6.36608 41.7125 14.287 47 23.4694 47Z"
+                                    fill="#34A853"
+                                />
+                                <path
+                                    d="M10.1212 28.1413C9.62245 26.6725 9.32908 25.1156 9.32908 23.5C9.32908 21.8844 9.62245 20.3275 10.0918 18.8588V18.5356L2.75765 12.8369L2.52296 12.9544C0.909439 16.1269 0 19.7106 0 23.5C0 27.2894 0.909439 30.8731 2.49362 34.0456L10.1212 28.1413Z"
+                                    fill="#FBBC05"
+                                />
+                                <path
+                                    d="M23.4694 9.07688C27.8699 9.07688 30.8622 10.9863 32.5344 12.5725L39.1645 6.11C35.0867 2.32063 29.8061 0 23.4694 0C14.287 0 6.36607 5.2875 2.49362 12.9544L10.0918 18.8588C11.9987 13.1894 17.25 9.07688 23.4694 9.07688Z"
+                                    fill="#EB4335"
+                                />
+                            </svg>
+                            Sign up with Google
+                        </button>
+                        <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6">
+                            Or
+                        </div>
+                        {/* Form */}
+                        <form onSubmit={signupForm.handleSubmit} >
+                            <div className="grid gap-y-4">
+                                {/* Form Group */}
+                                <div>
+                                    <label htmlFor="name" className="block text-sm mb-2">
+                                        Name
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            onChange={signupForm.handleChange}
+                                            value={signupForm.values.name}
+                                            className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            required=""
+                                            aria-describedby="name-error"
+                                        />
+                                        <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                            <svg
+                                                className="size-5 text-red-500"
+                                                width={16}
+                                                height={16}
+                                                fill="currentColor"
+                                                viewBox="0 0 16 16"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    {
+                                        (signupForm.errors.name && signupForm.touched.name) && (
+                                            <p className="text-xs text-red-600 mt-2" id="email-error">
+                                                {signupForm.errors.name}
+                                            </p>
+                                        )
+                                    }
+
+                                </div>
+                                {/* End Form Group */}
+                                {/* Form Group */}
+                                <div>
+                                    <label htmlFor="email" className="block text-sm mb-2">
+                                        Email address
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            onChange={signupForm.handleChange}
+                                            value={signupForm.values.email}
+                                            className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            // required=""
+                                            aria-describedby="email-error"
+                                        />
+                                        <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                            <svg
+                                                className="size-5 text-red-500"
+                                                width={16}
+                                                height={16}
+                                                fill="currentColor"
+                                                viewBox="0 0 16 16"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    {
+                                        (signupForm.errors.email && signupForm.touched.email) && (
+                                            <p className="text-xs text-red-600 mt-2" id="email-error">
+                                                {signupForm.errors.email}
+                                            </p>
+                                        )
+                                    }
+                                </div>
+                                {/* End Form Group */}
+                                {/* Form Group */}
+                                <div>
+                                    <label htmlFor="password" className="block text-sm mb-2">
+                                        Password
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            name="password"
+                                            onChange={signupForm.handleChange}
+                                            value={signupForm.values.password}
+                                            className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            required=""
+                                            aria-describedby="password-error"
+                                        />
+                                        <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                            <svg
+                                                className="size-5 text-red-500"
+                                                width={16}
+                                                height={16}
+                                                fill="currentColor"
+                                                viewBox="0 0 16 16"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    {
+                                        (signupForm.errors.password && signupForm.touched.password) && (
+                                            <p className="text-xs text-red-600 mt-2" id="email-error">
+                                                {signupForm.errors.password}
+                                            </p>
+                                        )
+                                    }
+                                </div>
+                                {/* End Form Group */}
+                                {/* Form Group */}
+                                <div>
+                                    <label htmlFor="confirm-password" className="block text-sm mb-2">
+                                        Confirm Password
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type="password"
+                                            id="confirmPassword"
+                                            name="confirmPassword"
+                                            onChange={signupForm.handleChange}
+                                            value={signupForm.values.confirmPassword}
+                                            className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            required=""
+                                            aria-describedby="confirmPassword-error"
+                                        />
+                                        <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                                            <svg
+                                                className="size-5 text-red-500"
+                                                width={16}
+                                                height={16}
+                                                fill="currentColor"
+                                                viewBox="0 0 16 16"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    {
+                                        (signupForm.errors.confirmPassword && signupForm.touched.confirmPassword) && (
+                                            <p className="text-xs text-red-600 mt-2" id="email-error">
+                                                {signupForm.errors.confirmPassword}
+                                            </p>
+                                        )
+                                    }
+                                </div>
+                                {/* End Form Group */}
+                                {/* Checkbox */}
+                                <div className="flex items-center">
+                                    <div className="flex">
+                                        <input
+                                            id="remember-me"
+                                            name="remember-me"
+                                            type="checkbox"
+                                            className="shrink-0 mt-0.5 border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
+                                        />
+                                    </div>
+                                    <div className="ms-3">
+                                        <label htmlFor="remember-me" className="text-sm">
+                                            I accept the{" "}
+                                            <a
+                                                className="text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
+                                                href="#"
+                                            >
+                                                Terms and Conditions
+                                            </a>
+                                        </label>
+                                    </div>
+                                </div>
+                                {/* End Checkbox */}
+                                <button
+                                    type="submit"
+                                    className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                                >
+                                    Sign up
+                                </button>
+                            </div>
+                        </form>
+                        {/* End Form */}
+                    </div>
+                </div>
             </div>
-            <div className="field">
-              <svg viewBox="0 0 16 16" fill="currentColor" height={16} width={16} xmlns="http://www.w3.org/2000/svg" className="input-icon">
-                <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z" />
-              </svg>
-              <input type="email" name='email' id='email' onChange={signupForm.handleChange} value={signupForm.values.email} className="input-field" placeholder="Email" autoComplete="off" />
-              <div>{signupForm.touched.email && signupForm.errors.email && (
-                <p className="text-xs text-red-600 mt-2">{signupForm.errors.email}</p>
-              )}</div>
-            </div>
-            <div className="field">
-              <svg viewBox="0 0 16 16" fill="currentColor" height={16} width={16} xmlns="http://www.w3.org/2000/svg" className="input-icon">
-                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
-              </svg>
-              <input type="password" name='password' id='password' onChange={signupForm.handleChange} value={signupForm.values.password} className="input-field" placeholder="Password" />
-             <div> {signupForm.touched.password && signupForm.errors.password && (
-                <p className="text-xs text-red-600 mt-2">{signupForm.errors.password}</p>
-              )}
-              </div>
-            </div>
-            <div className="field">
-              <svg viewBox="0 0 16 16" fill="currentColor" height={16} width={16} xmlns="http://www.w3.org/2000/svg" className="input-icon">
-                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
-              </svg>
-              <input type="password" name='confirmPassword' id='confirmPassword' onChange={signupForm.handleChange} value={signupForm.values.confirmPassword} className="input-field" placeholder="Confirm-Password" />
-              <div>{signupForm.touched.confirmPassword && signupForm.errors.confirmPassword && (
-                <p className="text-xs text-red-600 mt-2">{signupForm.errors.confirmPassword}</p>
-              )}
-              </div>
-            </div>
-            <div className="btn">
-              <button className="button1">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </button>
-              <button className="button2" type="submit">Sign Up</button>
-            </div>
-            <button className="button3">Forgot Password</button>
-          </form>
+
         </div>
-      </div>
-    </StyledWrapper>
-  );
+    )
 }
 
-const StyledWrapper = styled.div`
-
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-background-color: #0d0d0d;
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-left: 2em;
-    padding-right: 2em;
-    padding-bottom: 0.4em;
-    background-color: #171717;
-    border-radius: 25px;
-    transition: 0.4s ease-in-out;
-  }
-
-  .card {
-    background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
-    border-radius: 22px;
-    transition: all 0.3s;
-  }
-
-  .card2 {
-    border-radius: 0;
-    transition: all 0.2s;
-  }
-
-  .card2:hover {
-    transform: scale(0.98);
-    border-radius: 20px;
-  }
-
-  .card:hover {
-    box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.3);
-  }
-
-  #heading {
-    text-align: center;
-    margin: 2em;
-    color: rgb(255, 255, 255);
-    font-size: 1.2em;
-  }
-
-  .field {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    border-radius: 25px;
-    padding: 0.6em;
-    border: none;
-    outline: none;
-    color: white;
-    background-color: #171717;
-    box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
-  }
-
-  .input-icon {
-    height: 1.3em;
-    width: 1.3em;
-    fill: white;
-  }
-
-  .input-field {
-    background: none;
-    border: none;
-    outline: none;
-    width: 100%;
-    color: #d3d3d3;
-  }
-
-  .form .btn {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    margin-top: 2.5em;
-  }
-
-  .button1 {
-    padding: 0.5em;
-    padding-left: 1.1em;
-    padding-right: 1.1em;
-    border-radius: 5px;
-    margin-right: 0.5em;
-    border: none;
-    outline: none;
-    transition: 0.4s ease-in-out;
-    background-color: #252525;
-    color: white;
-  }
-
-  .button1:hover {
-    background-color: black;
-    color: white;
-  }
-
-  .button2 {
-    padding: 0.5em;
-    padding-left: 2.3em;
-    padding-right: 2.3em;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    transition: 0.4s ease-in-out;
-    background-color: #252525;
-    color: white;
-  }
-
-  .button2:hover {
-    background-color: black;
-    color: white;
-  }
-
-  .button3 {
-    margin-bottom: 3em;
-    padding: 0.5em;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    transition: 0.4s ease-in-out;
-    background-color: #252525;
-    color: white;
-  }
-
-  .button3:hover {
-    background-color: red;
-    color: white;
-  }`;
-
-export default FormSignup;
+export default Signup;
