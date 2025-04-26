@@ -26,16 +26,16 @@ const Login = () => {
     });
     
     return (
-        <div className='mx-auto flex items-center justify-center min-h-screen bg-gray-50 '>
-            <div className="mt-7 bg-white border border-gray-200 rounded-xl w-[30%] shadow-2xs">
+        <div className='mx-auto flex items-center justify-center min-h-screen' style={{ background: '#121212' }}>
+            <div className="mt-7 border border-gray-800 rounded-xl w-[30%] shadow-lg" style={{ background: '#1a1a1a' }}>
                 <div className="p-4 sm:p-7">
                     <div className="text-center">
-                        <h1 className="block text-2xl font-bold text-gray-800">Sign in</h1>
-                        <p className="mt-2 text-sm text-gray-600">
+                        <h1 className="block text-2xl font-bold text-white">Sign in</h1>
+                        <p className="mt-2 text-sm text-gray-400">
                             Don't have an account yet?
                             <a
-                                className="text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
-                                href="../examples/html/signup.html"
+                                className="text-[#00FFFF] decoration-2 hover:underline focus:outline-hidden focus:underline font-medium ml-1"
+                                href="/signup"
                             >
                                 Sign up here
                             </a>
@@ -44,7 +44,7 @@ const Login = () => {
                     <div className="mt-5">
                         <button
                             type="button"
-                            className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                            className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-700 bg-gray-800 text-white shadow-2xs hover:bg-gray-700 focus:outline-hidden focus:bg-gray-700 disabled:opacity-50 disabled:pointer-events-none"
                         >
                             <svg
                                 className="w-4 h-auto"
@@ -72,7 +72,7 @@ const Login = () => {
                             </svg>
                             Sign in with Google
                         </button>
-                        <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6">
+                        <div className="py-3 flex items-center text-xs text-gray-500 uppercase before:flex-1 before:border-t before:border-gray-700 before:me-6 after:flex-1 after:border-t after:border-gray-700 after:ms-6">
                             Or
                         </div>
                         {/* Form */}
@@ -80,7 +80,7 @@ const Login = () => {
                             <div className="grid gap-y-4">
                                 {/* Form Group */}
                                 <div>
-                                    <label htmlFor="email" className="block text-sm mb-2">
+                                    <label htmlFor="email" className="block text-sm mb-2 text-white">
                                         Email address
                                     </label>
                                     <div className="relative">
@@ -90,7 +90,7 @@ const Login = () => {
                                             name="email"
                                             onChange={loginForm.handleChange}
                                             value={loginForm.values.email}
-                                            className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            className="py-2.5 sm:py-3 px-4 block w-full bg-gray-800 border-gray-700 text-white rounded-lg sm:text-sm focus:border-[#00FFFF] focus:ring-[#00FFFF] disabled:opacity-50 disabled:pointer-events-none"
                                             required=""
                                             aria-describedby="email-error"
                                         />
@@ -107,7 +107,7 @@ const Login = () => {
                                             </svg>
                                         </div>
                                     </div>
-                                    <p className="hidden text-xs text-red-600 mt-2" id="email-error">
+                                    <p className="hidden text-xs text-red-400 mt-2" id="email-error">
                                         Please include a valid email address so we can get back to you
                                     </p>
                                 </div>
@@ -115,11 +115,11 @@ const Login = () => {
                                 {/* Form Group */}
                                 <div>
                                     <div className="flex flex-wrap justify-between items-center gap-2">
-                                        <label htmlFor="password" className="block text-sm mb-2">
+                                        <label htmlFor="password" className="block text-sm mb-2 text-white">
                                             Password
                                         </label>
                                         <a
-                                            className="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
+                                            className="inline-flex items-center gap-x-1 text-sm text-[#00FFFF] decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
                                             href="../examples/html/recover-account.html"
                                         >
                                             Forgot password?
@@ -132,7 +132,7 @@ const Login = () => {
                                             name="password"
                                             onChange={loginForm.handleChange}
                                             value={loginForm.values.password}
-                                            className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            className="py-2.5 sm:py-3 px-4 block w-full bg-gray-800 border-gray-700 text-white rounded-lg sm:text-sm focus:border-[#00FFFF] focus:ring-[#00FFFF] disabled:opacity-50 disabled:pointer-events-none"
                                             required=""
                                             aria-describedby="password-error"
                                         />
@@ -149,7 +149,7 @@ const Login = () => {
                                             </svg>
                                         </div>
                                     </div>
-                                    <p className="hidden text-xs text-red-600 mt-2" id="password-error">
+                                    <p className="hidden text-xs text-red-400 mt-2" id="password-error">
                                         8+ characters required
                                     </p>
                                 </div>
@@ -161,11 +161,11 @@ const Login = () => {
                                             id="remember-me"
                                             name="remember-me"
                                             type="checkbox"
-                                            className="shrink-0 mt-0.5 border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
+                                            className="shrink-0 mt-0.5 border-gray-700 rounded-sm text-[#00FFFF] focus:ring-[#00FFFF]"
                                         />
                                     </div>
                                     <div className="ms-3">
-                                        <label htmlFor="remember-me" className="text-sm">
+                                        <label htmlFor="remember-me" className="text-sm text-white">
                                             Remember me
                                         </label>
                                     </div>
@@ -173,7 +173,7 @@ const Login = () => {
                                 {/* End Checkbox */}
                                 <button
                                     type="submit"
-                                    className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                                    className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gradient-to-r from-[#00FFFF] to-[#FF00FF] text-white hover:opacity-90 focus:outline-hidden focus:opacity-90 disabled:opacity-50 disabled:pointer-events-none"
                                 >
                                     Sign in
                                 </button>
