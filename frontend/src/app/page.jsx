@@ -1,705 +1,391 @@
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Layout, Menu, Button, Input, Card, Row, Col, Typography, Space, Divider, Badge, Tag } from 'antd';
-import '@ant-design/v5-patch-for-react-19';
-import {
-  SearchOutlined,
-  UserOutlined,
-  MailOutlined,
-  QuestionCircleOutlined,
-  RocketOutlined,
-  StarOutlined,
-  FireOutlined,
-  BulbOutlined,
-  ThunderboltOutlined,
-  GlobalOutlined,
-  CodeOutlined,
-  RobotOutlined
-} from '@ant-design/icons';
-import Link from 'next/link';
-import Image from 'next/image';
-import RotatingText from '@/components/UI/RotatingText';
+import Link from 'next/link'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 
-const { Header, Content, Footer } = Layout;
-const { Title, Text, Paragraph } = Typography;
+// AI tool comparison data
+const aiTools = [
+  {
+    name: 'ChatGPT',
+    category: 'Text Generation',
+    description: 'Versatile conversational AI assistant with strong text generation capabilities',
+    strengths: ['Natural conversations', 'Broad knowledge base', 'Code assistance'],
+    weaknesses: ['Occasional inaccuracies', 'Limited context window', 'No real-time data'],
+    rating: 4.7,
+    color: 'from-emerald-500 to-teal-500'
+  },
+  {
+    name: 'Midjourney',
+    category: 'Image Generation',
+    description: 'Powerful AI image generator with photorealistic and artistic capabilities',
+    strengths: ['Stunning visual quality', 'Creative versatility', 'Strong style control'],
+    weaknesses: ['Subscription required', 'Learning curve for prompts', 'Limited editing'],
+    rating: 4.8,
+    color: 'from-blue-500 to-indigo-600'
+  },
+  {
+    name: 'GitHub Copilot',
+    category: 'Coding Assistant',
+    description: 'AI pair programmer that helps developers write code faster and with fewer bugs',
+    strengths: ['Code completions', 'Language versatility', 'IDE integration'],
+    weaknesses: ['Occasional inaccurate suggestions', 'Subscription cost', 'Privacy concerns'],
+    rating: 4.6,
+    color: 'from-violet-500 to-purple-600'
+  }
+]
 
-const Home = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('trending');
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+}
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
-  // Animation variants
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 }
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
     }
-  };
+  }
+}
 
-  const fadeInLeft = {
-    hidden: { opacity: 0, x: -30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.6 }
-    }
-  };
+export default function Home() {
 
-  const fadeInRight = {
-    hidden: { opacity: 0, x: 30 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.6 }
-    }
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const pulseAnimation = {
-    scale: [1, 1.05, 1],
-    transition: { duration: 2, repeat: Infinity }
-  };
-
-  // AI Tools categories
-  const categories = [
-    {
-      title: 'Text & Writing',
-      icon: <RobotOutlined />,
-      color: '#00FFFF',
-      description: 'Content generation, copywriting, and text enhancement tools',
-      count: 86
-    },
-    {
-      title: 'Coding & Development',
-      icon: <CodeOutlined />,
-      color: '#FF00FF',
-      description: 'Code assistants, bug fixers, and development accelerators',
-      count: 104
-    },
-    {
-      title: 'Image & Design',
-      icon: <BulbOutlined />,
-      color: '#FFFF00',
-      description: 'Image generation, editing tools, and design assistants',
-      count: 78
-    },
-    {
-      title: 'Audio & Speech',
-      icon: <ThunderboltOutlined />,
-      color: '#FFA500',
-      description: 'Voice synthesis, transcription, and audio enhancement',
-      count: 52
-    },
-    {
-      title: 'Video Creation',
-      icon: <FireOutlined />,
-      color: '#FF4500',
-      description: 'Video generators, editors, and animation tools',
-      count: 47
-    },
-    {
-      title: 'Business & Data',
-      icon: <GlobalOutlined />,
-      color: '#00FF00',
-      description: 'Analytics, business intelligence, and data processing',
-      count: 93
-    }
-  ];
-
-  // Featured AI Tools
-  const featuredTools = [
-    {
-      name: 'NeuralWriter Pro',
-      category: 'Text & Writing',
-      rating: 4.9,
-      image: 'https://images.unsplash.com/photo-1526378800651-c32d170fe6f8?q=80&w=2069&auto=format&fit=crop',
-      tags: ['Content', 'SEO', 'Free Trial'],
-      description: 'Advanced AI writing assistant with context-aware content generation',
-      highlight: 'TRENDING'
-    },
-    {
-      name: 'CodePilot X',
-      category: 'Coding & Development',
-      rating: 4.8,
-      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop',
-      tags: ['Python', 'JavaScript', 'Paid'],
-      description: 'Complete coding assistant for 25+ languages with advanced debugging',
-      highlight: 'POPULAR'
-    },
-    {
-      name: 'DreamCanvas AI',
-      category: 'Image & Design',
-      rating: 4.7,
-      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop',
-      tags: ['Art', 'Generation', 'Freemium'],
-      description: 'Create stunning artwork and graphics from text descriptions',
-      highlight: 'NEW'
-    },
-    {
-      name: 'DataSense Pro',
-      category: 'Business & Data',
-      rating: 4.8,
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop',
-      tags: ['Analytics', 'Visualization', 'Enterprise'],
-      description: 'Transform raw data into actionable business intelligence instantly',
-      highlight: 'EDITOR\'S CHOICE'
-    }
-  ];
+  const [hoveredTool, setHoveredTool] = useState(null)
 
   return (
-    <Layout className="min-h-screen" style={{ background: '#121212' }}>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800">
       {/* Navigation */}
-      <Header className="fixed w-full z-50 bg-[#1a1a1a] shadow-lg flex items-center justify-between px-4 md:px-8 lg:px-16">
-        <Link href="/" className="text-2xl font-bold flex items-center">
-          <RocketOutlined style={{ color: '#00FFFF', fontSize: '28px', marginRight: '8px' }} />
-          <span style={{
-            background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            paddingRight: '4px'
-          }}>
-            AI Compass
-          </span>
-        </Link>
-
-        <div className="flex items-center">
-          <div className="hidden lg:block">
-            <Menu
-              mode="horizontal"
-              className="border-0 bg-transparent"
-              style={{ color: '#ffffff' }}
-              items={[
-                { key: 'tools', label: 'AI Tools' },
-                { key: 'categories', label: 'Categories' },
-                { key: 'pricing', label: 'Pricing' },
-                { key: 'about', label: 'About' },
-                { key: 'blog', label: 'Blog' }
-              ]}
-              theme="dark"
-            />
+      <nav className="backdrop-blur-md bg-white/80 dark:bg-gray-900/80 sticky top-0 z-10 border-b border-gray-200 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <motion.div
+                className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                AI Compass
+              </motion.div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/explore"
+                className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400 transition-colors"
+              >
+                Explore
+              </Link>
+              <Link
+                href="/compare"
+                className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400 transition-colors"
+              >
+                Compare
+              </Link>
+              <Link
+                href="/dashboard"
+                className="px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-sm transition-all hover:shadow-md"
+              >
+                Sign In
+              </Link>
+            </div>
           </div>
+        </div>
+      </nav>
 
-          <Space size="middle" className="ml-4">
-            <Button type="text" style={{ color: '#ffffff' }}>Login</Button>
-            <Button
-              type="primary"
-              style={{
-                background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
-                border: 'none'
-              }}
+      {/* Hero section */}
+      <section className="relative px-6 pt-20 pb-16 lg:px-8 overflow-hidden">
+        <motion.div
+          className="absolute inset-0 -z-10 overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          <svg className="absolute left-[calc(50%-33rem)] top-9 -z-10 transform-gpu blur-3xl" aria-hidden="true" viewBox="0 0 1155 678">
+            <path fill="url(#9b2541ea-d39d-499b-bd42-aeea3e93f5ff)" fillOpacity=".3" d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z" />
+            <defs>
+              <linearGradient id="9b2541ea-d39d-499b-bd42-aeea3e93f5ff" x1="1155.49" x2="-78.208" y1=".177" y2="474.645" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#9089FC" />
+                <stop offset={1} stopColor="#FF80B5" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </motion.div>
+
+        <div className="mx-auto max-w-6xl">
+          <motion.div
+            className="text-center"
+            initial="hidden"
+            animate="visible"
+            variants={fadeIn}
+          >
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl md:text-7xl mb-6">
+              Navigate the AI <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">landscape</span>
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Compare AI tools with precision and clarity. Find the perfect AI solution for your specific needs with data-driven insights and expert analysis.
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  href="/compare"
+                  className="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3.5 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all"
+                >
+                  Start comparing
+                </Link>
+              </motion.div>
+              <Link
+                href="/explore"
+                className="text-sm font-semibold leading-6 text-gray-900 dark:text-white group"
+              >
+                Explore tools <span className="inline-block transition-transform group-hover:translate-x-1 ml-1">→</span>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Featured comparison section */}
+      <section className="py-16 px-6 lg:px-8">
+        <motion.div
+          className="mx-auto max-w-6xl"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+        >
+          <div className="text-center mb-16">
+            <motion.h2
+              className="text-base font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase"
+              variants={fadeIn}
             >
-              Sign Up
-            </Button>
-          </Space>
-        </div>
-      </Header>
-
-      <Content className="pt-16">
-        {/* Hero Section */}
-        <motion.section
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="py-20 px-4 md:py-32 text-center relative overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, #121212 0%, #1E1E1E 100%)',
-            borderBottom: '1px solid rgba(255,255,255,0.1)'
-          }}
-        >
-          {/* Abstract background elements */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-            <motion.div
-              className="absolute rounded-full"
-              style={{
-                background: 'radial-gradient(circle, rgba(0,255,255,0.2) 0%, rgba(0,255,255,0) 70%)',
-                width: '60%',
-                height: '60%',
-                top: '-20%',
-                left: '-20%'
-              }}
-              animate={pulseAnimation}
-            />
-            <motion.div
-              className="absolute rounded-full"
-              style={{
-                background: 'radial-gradient(circle, rgba(255,0,255,0.15) 0%, rgba(255,0,255,0) 70%)',
-                width: '50%',
-                height: '50%',
-                bottom: '-10%',
-                right: '-10%'
-              }}
-              animate={pulseAnimation}
-            />
+              Featured Comparisons
+            </motion.h2>
+            <motion.p
+              className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl"
+              variants={fadeIn}
+            >
+              Popular AI Tools Head-to-Head
+            </motion.p>
           </div>
 
-          <div className="relative z-10">
-            <motion.div variants={fadeInUp}>
-              <Title level={1} className="mb-6 text-4xl md:text-6xl font-bold" style={{ maxWidth: '900px', margin: '0 auto', color: '#ffffff' }}>
-                <span style={{
-                  background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 50%, #FFFF00 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}>
-                  Discover & Compare <br className="hidden md:block" />
-                  The Best AI Tools
-                </span>
-              </Title>
-
-              <Paragraph className="text-gray-300 mb-8 max-w-2xl mx-auto text-lg">
-                Your expert guide to finding the perfect AI solutions for any task.
-                Over 500+ curated tools with detailed reviews and comparisons.
-              </Paragraph>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} className="max-w-2xl mx-auto">
-              <Input
-                placeholder="Search AI tools by name, feature or category..."
-                size="large"
-                className="rounded-full py-3 border-0"
-                style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', backdropFilter: 'blur(10px)' }}
-                suffix={
-                  <Button
-                    type="primary"
-                    icon={<SearchOutlined />}
-                    size="large"
-                    className="rounded-full"
-                    style={{
-                      background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
-                      border: 'none'
-                    }}
-                  />
-                }
-              />
-
-              <div className="flex flex-wrap gap-2 justify-center mt-4">
-                <Tag color="#00FFFF" className="rounded-full px-3 py-1">ChatGPT</Tag>
-                <Tag color="#FF00FF" className="rounded-full px-3 py-1">Midjourney</Tag>
-                <Tag color="#FFFF00" className="rounded-full px-3 py-1">Claude</Tag>
-                <Tag color="#FFA500" className="rounded-full px-3 py-1">Stable Diffusion</Tag>
-                <Tag color="#FF4500" className="rounded-full px-3 py-1">DALL-E</Tag>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeInUp}>
-              <Button
-                type="primary"
-                size="large"
-                className="mt-12 rounded-full"
-                style={{
-                  background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
-                  border: 'none',
-                  height: '50px',
-                  padding: '0 32px',
-                  fontSize: '18px'
-                }}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            variants={staggerContainer}
+          >
+            {aiTools.map((tool, index) => (
+              <motion.div
+                key={tool.name}
+                className="relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-all duration-300"
+                variants={fadeIn}
+                whileHover={{ y: -5 }}
+                onHoverStart={() => setHoveredTool(index)}
+                onHoverEnd={() => setHoveredTool(null)}
               >
-                Explore All AI Tools
-              </Button>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        <div className='flex justify-center items-center py-4 bg-[#121212] relative z-10'>
-          <Text style={{ color: '#ffffff', fontSize: '24px', paddingRight: '15px' }} className="text-white text-2xl font-semibold">Increase</Text>
-          <RotatingText
-            texts={['Productivity', 'Creativity', 'Efficiency', 'Intelligence', 'Automation']}
-            mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black font-bold text-2xl overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
-            staggerFrom={"last"}
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "-120%" }}
-            staggerDuration={0.025}
-            splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-            transition={{ type: "spring", damping: 30, stiffness: 400 }}
-            rotationInterval={3000}
-          />
-        </div>
-
-
-        {/* Categories Section */}
-        <motion.section
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="py-24 px-4 bg-[#121212] relative"
-        >
-          <div className="max-w-7xl mx-auto relative z-10">
-            <motion.div variants={fadeInUp} className="text-center mb-16">
-              <Title level={2} className="mb-4" style={{ color: '#ffffff' }}>
-                <span style={{
-                  background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}>
-                  Explore by Category
-                </span>
-              </Title>
-              <Paragraph className="text-gray-400 max-w-2xl mx-auto">
-                Find the perfect AI tool for your specific needs from our curated collection
-                across multiple categories
-              </Paragraph>
-            </motion.div>
-
-            <Row gutter={[24, 24]} className="mb-8">
-              {categories.map((category, index) => (
-                <Col xs={24} sm={12} md={8} key={index}>
-                  <motion.div variants={fadeInUp}>
-                    <Card
-                      className="h-full"
-                      hoverable
-                      style={{
-                        background: 'rgba(30,30,30,0.5)',
-                        border: `1px solid rgba(${category.color === '#00FFFF' ? '0,255,255' :
-                          category.color === '#FF00FF' ? '255,0,255' :
-                            category.color === '#FFFF00' ? '255,255,0' :
-                              category.color === '#FFA500' ? '255,165,0' :
-                                category.color === '#FF4500' ? '255,69,0' :
-                                  '0,255,0'},0.3)`,
-                        borderRadius: '16px',
-                        overflow: 'hidden'
-                      }}
-                      styles={{
-                        body: { padding: '24px' }
-                      }}
-                    >
-                      <div className="flex items-center mb-4">
-                        <div
-                          className="p-3 rounded-full mr-3"
-                          style={{
-                            background: `rgba(${category.color === '#00FFFF' ? '0,255,255' :
-                              category.color === '#FF00FF' ? '255,0,255' :
-                                category.color === '#FFFF00' ? '255,255,0' :
-                                  category.color === '#FFA500' ? '255,165,0' :
-                                    category.color === '#FF4500' ? '255,69,0' :
-                                      '0,255,0'},0.15)`
-                          }}
-                        >
-                          <span style={{ color: category.color, fontSize: '24px' }}>{category.icon}</span>
-                        </div>
-                        <div>
-                          <Title level={4} style={{ color: '#ffffff', margin: 0 }}>
-                            {category.title}
-                          </Title>
-                          <Badge count={category.count} style={{ backgroundColor: category.color }} />
-                        </div>
-                      </div>
-                      <Paragraph className="text-gray-400" style={{ marginBottom: '16px' }}>
-                        {category.description}
-                      </Paragraph>
-                      <Button
-                        type="text"
-                        size="middle"
-                        style={{ color: category.color, padding: 0 }}
-                      >
-                        Browse Tools →
-                      </Button>
-                    </Card>
-                  </motion.div>
-                </Col>
-              ))}
-            </Row>
-
-            <div className="text-center">
-              <Button
-                type="default"
-                size="large"
-                ghost
-                style={{
-                  borderColor: '#00FFFF',
-                  color: '#00FFFF'
-                }}
-              >
-                View All Categories
-              </Button>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Featured Tools Section */}
-        <motion.section
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="py-24 px-4 bg-[#121212]"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
-        >
-          <div className="max-w-7xl mx-auto">
-            <motion.div variants={fadeInUp} className="text-center mb-12">
-              <Title level={2} className="mb-4" style={{ color: '#ffffff' }}>
-                <span style={{
-                  background: 'linear-gradient(90deg, #FFFF00 0%, #00FFFF 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}>
-                  Featured AI Tools
-                </span>
-              </Title>
-              <Paragraph className="text-gray-400 max-w-2xl mx-auto">
-                Discover the most popular, trending, and highest-rated AI tools in our collection
-              </Paragraph>
-            </motion.div>
-
-            <div className="flex justify-center mb-12 overflow-x-auto pb-2">
-              <Space.Compact size="large">
-                <Button
-                  type={activeTab === 'trending' ? "primary" : "default"}
-                  onClick={() => setActiveTab('trending')}
-                  style={{
-                    background: activeTab === 'trending' ? 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)' : 'transparent',
-                    borderColor: activeTab === 'trending' ? 'transparent' : 'rgba(255,255,255,0.2)',
-                    color: activeTab === 'trending' ? '#fff' : '#aaa'
-                  }}
-                >
-                  <FireOutlined /> Trending
-                </Button>
-                <Button
-                  type={activeTab === 'new' ? "primary" : "default"}
-                  onClick={() => setActiveTab('new')}
-                  style={{
-                    background: activeTab === 'new' ? 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)' : 'transparent',
-                    borderColor: activeTab === 'new' ? 'transparent' : 'rgba(255,255,255,0.2)',
-                    color: activeTab === 'new' ? '#fff' : '#aaa'
-                  }}
-                >
-                  <ThunderboltOutlined /> Newest
-                </Button>
-                <Button
-                  type={activeTab === 'top-rated' ? "primary" : "default"}
-                  onClick={() => setActiveTab('top-rated')}
-                  style={{
-                    background: activeTab === 'top-rated' ? 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)' : 'transparent',
-                    borderColor: activeTab === 'top-rated' ? 'transparent' : 'rgba(255,255,255,0.2)',
-                    color: activeTab === 'top-rated' ? '#fff' : '#aaa'
-                  }}
-                >
-                  <StarOutlined /> Top Rated
-                </Button>
-                <Button
-                  type={activeTab === 'free' ? "primary" : "default"}
-                  onClick={() => setActiveTab('free')}
-                  style={{
-                    background: activeTab === 'free' ? 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)' : 'transparent',
-                    borderColor: activeTab === 'free' ? 'transparent' : 'rgba(255,255,255,0.2)',
-                    color: activeTab === 'free' ? '#fff' : '#aaa'
-                  }}
-                >
-                  Free Tools
-                </Button>
-              </Space.Compact>
-            </div>
-
-            <Row gutter={[24, 24]}>
-              {featuredTools.map((tool, index) => (
-                <Col xs={24} sm={12} lg={6} key={index}>
-                  <motion.div variants={fadeInUp}>
-                    <Card
-                      hoverable
-                      style={{
-                        background: 'rgba(25,25,25,0.8)',
-                        borderRadius: '16px',
-                        overflow: 'hidden',
-                        border: '1px solid rgba(255,255,255,0.1)'
-                      }}
-                      styles={{ body: { padding: '16px' } }}
-                      cover={
-                        <div className="relative h-48">
-                          <div
-                            className="absolute inset-0 bg-cover bg-center"
-                            style={{ backgroundImage: `url(${tool.image})` }}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
-                          {tool.highlight && (
-                            <span
-                              className="absolute top-3 right-3 text-xs font-bold py-1 px-2 rounded-full"
-                              style={{
-                                background: tool.highlight === 'TRENDING' ? '#FF00FF' :
-                                  tool.highlight === 'POPULAR' ? '#FFA500' :
-                                    tool.highlight === 'NEW' ? '#00FFFF' :
-                                      '#FFFF00'
-                              }}
-                            >
-                              {tool.highlight}
-                            </span>
-                          )}
-                          <div className="absolute bottom-3 left-3 flex items-center">
-                            <span className="bg-yellow-400 text-black text-xs font-bold py-1 px-2 rounded-full flex items-center">
-                              <StarOutlined /> {tool.rating}
-                            </span>
-                            <span className="ml-2 text-xs text-white bg-black bg-opacity-60 py-1 px-2 rounded-full">
-                              {tool.category}
-                            </span>
-                          </div>
-                        </div>
-                      }
-                    >
-                      <Title level={4} style={{ color: '#ffffff', margin: '0 0 8px 0' }}>
-                        {tool.name}
-                      </Title>
-                      <Paragraph style={{ color: '#aaaaaa', fontSize: '14px', margin: '0 0 12px 0' }}>
-                        {tool.description}
-                      </Paragraph>
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {tool.tags.map((tag, idx) => (
-                          <Tag
-                            key={idx}
-                            color="rgba(0, 0, 0, 0.5)"
-                            style={{
-                              border: '1px solid rgba(255,255,255,0.2)',
-                              color: '#aaa'
-                            }}
-                          >
-                            {tag}
-                          </Tag>
-                        ))}
-                      </div>
-                      <Button
-                        type="primary"
-                        block
-                        style={{
-                          background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
-                          border: 'none'
-                        }}
-                      >
-                        View Details
-                      </Button>
-                    </Card>
-                  </motion.div>
-                </Col>
-              ))}
-            </Row>
-
-            <div className="text-center mt-12">
-              <Button
-                type="primary"
-                size="large"
-                className="rounded-full"
-                style={{
-                  background: 'rgba(255,255,255,0.1)',
-                  borderColor: '#00FFFF',
-                  color: '#00FFFF'
-                }}
-              >
-                View All AI Tools
-              </Button>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Newsletter Section */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          variants={staggerContainer}
-          viewport={{ once: true }}
-          className="py-24 px-4 relative overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, rgba(0,255,255,0.1) 0%, rgba(255,0,255,0.1) 100%)',
-            borderTop: '1px solid rgba(255,255,255,0.05)',
-            borderBottom: '1px solid rgba(255,255,255,0.05)'
-          }}
-        >
-          <div className="max-w-5xl mx-auto relative z-10">
-            <Row gutter={[48, 48]} align="middle">
-              <Col xs={24} md={12}>
-                <motion.div variants={fadeInLeft}>
-                  <Title level={2} style={{ color: '#ffffff' }}>
-                    <span style={{
-                      background: 'linear-gradient(90deg, #FFFF00 0%, #00FFFF 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}>
-                      Stay Updated with New AI Tools
+                <div className={`h-2 bg-gradient-to-r ${tool.color}`} />
+                <div className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">{tool.name}</h3>
+                      <p className="text-sm text-indigo-600 dark:text-indigo-400">{tool.category}</p>
+                    </div>
+                    <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-200">
+                      {tool.rating}/5
                     </span>
-                  </Title>
-                  <Paragraph className="text-gray-300 mb-0">
-                    Subscribe to our newsletter and be the first to know about the latest AI tools,
-                    exclusive reviews, and special offers.
-                  </Paragraph>
-                </motion.div>
-              </Col>
-              <Col xs={24} md={12}>
-                <motion.div variants={fadeInRight}>
-                  <Space.Compact className="w-full">
-                    <Input
-                      placeholder="Enter your email address"
-                      size="large"
-                      style={{
-                        background: 'rgba(255,255,255,0.1)',
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        borderRight: 'none',
-                        color: '#fff',
-                        width: 'calc(100% - 150px)',
-                        borderTopLeftRadius: '8px',
-                        borderBottomLeftRadius: '8px'
-                      }}
-                    />
-                    <Button
-                      type="primary"
-                      size="large"
-                      style={{
-                        width: '150px',
-                        background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
-                        border: 'none',
-                        borderTopRightRadius: '8px',
-                        borderBottomRightRadius: '8px'
-                      }}
+                  </div>
+                  <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
+
+                  <div className="mt-6">
+                    <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Strengths</h4>
+                    <ul className="mt-2 space-y-1">
+                      {tool.strengths.map((strength, i) => (
+                        <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-center">
+                          <svg className="w-3.5 h-3.5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                          </svg>
+                          {strength}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-4">
+                    <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Weaknesses</h4>
+                    <ul className="mt-2 space-y-1">
+                      {tool.weaknesses.map((weakness, i) => (
+                        <li key={i} className="text-sm text-gray-600 dark:text-gray-300 flex items-center">
+                          <svg className="w-3.5 h-3.5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+                          {weakness}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <Link
+                      href={`/tool/${tool.name.toLowerCase()}`}
+                      className="inline-flex items-center text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
                     >
-                      Subscribe
-                    </Button>
-                  </Space.Compact>
-                  <Text className="text-gray-400 text-sm mt-2 block" style={{ color: '#ffffff' }}>
-                    We respect your privacy. Unsubscribe at any time.
-                  </Text>
-                </motion.div>
-              </Col>
-            </Row>
+                      Detailed analysis
+                      <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Features section */}
+      <section className="py-16 px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
+        <motion.div
+          className="mx-auto max-w-6xl"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+        >
+          <div className="text-center mb-16">
+            <motion.h2
+              className="text-base font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase"
+              variants={fadeIn}
+            >
+              Why Choose AI Compass
+            </motion.h2>
+            <motion.p
+              className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl"
+              variants={fadeIn}
+            >
+              Make informed decisions with our unique approach
+            </motion.p>
           </div>
 
-          {/* Abstract background elements */}
           <motion.div
-            className="absolute rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0) 70%)',
-              width: '40%',
-              height: '40%',
-              bottom: '-10%',
-              left: '-10%'
-            }}
-            animate={pulseAnimation}
-          />
-          <motion.div
-            className="absolute rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(255,0,255,0.1) 0%, rgba(255,0,255,0) 70%)',
-              width: '50%',
-              height: '50%',
-              top: '-20%',
-              right: '-10%'
-            }}
-            animate={pulseAnimation}
-          />
-        </motion.section>
-      </Content>
-    </Layout>
-  );
-};
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16"
+            variants={staggerContainer}
+          >
+            <motion.div
+              className="relative p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm"
+              variants={fadeIn}
+              whileHover={{ y: -5 }}
+            >
+              <div className="h-12 w-12 rounded-xl bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mb-4">
+                <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Detailed Metrics</h3>
+              <p className="mt-4 text-gray-600 dark:text-gray-300">
+                Compare AI tools across 50+ standardized metrics to find the perfect match for your specific requirements.
+              </p>
+            </motion.div>
 
-export default Home;
+            <motion.div
+              className="relative p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm"
+              variants={fadeIn}
+              whileHover={{ y: -5 }}
+            >
+              <div className="h-12 w-12 rounded-xl bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mb-4">
+                <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Real-time Updates</h3>
+              <p className="mt-4 text-gray-600 dark:text-gray-300">
+                Our data is constantly updated to reflect the latest features, pricing changes, and performance benchmarks.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="relative p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm"
+              variants={fadeIn}
+              whileHover={{ y: -5 }}
+            >
+              <div className="h-12 w-12 rounded-xl bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mb-4">
+                <svg className="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Community Insights</h3>
+              <p className="mt-4 text-gray-600 dark:text-gray-300">
+                Benefit from thousands of verified user reviews and expert analysis to get beyond the marketing claims.
+              </p>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 px-6 lg:px-8">
+        <motion.div
+          className="mx-auto max-w-6xl"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeIn}
+        >
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div className="absolute inset-0 mix-blend-multiply opacity-20 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+            <div className="relative px-6 py-16 sm:px-12 sm:py-20 lg:py-24 lg:px-16">
+              <div className="mx-auto max-w-2xl text-center">
+                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                  Find your perfect AI match today
+                </h2>
+                <p className="mt-6 text-lg leading-8 text-indigo-100">
+                  Join thousands of professionals who use AI Compass to make better technology decisions.
+                </p>
+                <div className="mt-10 flex items-center justify-center gap-x-6">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Link
+                      href="/signup"
+                      className="rounded-xl bg-white px-8 py-3.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-all"
+                    >
+                      Create free account
+                    </Link>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <div className="mx-auto max-w-6xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
+          <div className="flex justify-center space-x-6 md:order-2">
+            <Link href="#" className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+              <span className="sr-only">Twitter</span>
+              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+              </svg>
+            </Link>
+            <Link href="#" className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+              <span className="sr-only">GitHub</span>
+              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+              </svg>
+            </Link>
+          </div>
+          <div className="mt-8 md:order-1 md:mt-0">
+            <p className="text-center text-xs leading-5 text-gray-500 dark:text-gray-400">
+              &copy; 2023 AI Compass. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}

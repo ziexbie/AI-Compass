@@ -217,3 +217,19 @@ const RotatingText = forwardRef((props, ref) => {
 RotatingText.displayName = "RotatingText";
 
 export default RotatingText;
+
+{/* <div className='flex justify-center items-center py-4 bg-[#121212] relative z-10'>
+    <Text style={{ color: '#ffffff', fontSize: '24px', paddingRight: '15px' }} className="text-white text-2xl font-semibold">Increase</Text>
+    <RotatingText
+        texts={['Productivity', 'Creativity', 'Efficiency', 'Intelligence', 'Automation']}
+        mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black font-bold text-2xl overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+        staggerFrom={"last"}
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "-120%" }}
+        staggerDuration={0.025}
+        splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+        transition={{ type: "spring", damping: 30, stiffness: 400 }}
+        rotationInterval={3000}
+    />
+</div> */}
