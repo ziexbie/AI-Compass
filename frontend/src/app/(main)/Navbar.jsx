@@ -2,60 +2,48 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Layout, Menu, Button, Space } from 'antd';
-import { RocketOutlined } from '@ant-design/icons';
-
-const { Header } = Layout;
+import { motion } from 'framer-motion';
 
 const Navbar = () => {
     return (
-        <Header className="fixed w-full z-50 bg-[#1a1a1a] shadow-lg flex items-center justify-between px-4 md:px-8 lg:px-16">
-            <Link href="/" className="text-2xl font-bold flex items-center">
-                <RocketOutlined style={{ color: '#00FFFF', fontSize: '28px', marginRight: '8px' }} />
-                <span style={{
-                    background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    paddingRight: '4px'
-                }}>
-                    AI Compass
-                </span>
-            </Link>
-
-            <div className="flex items-center">
-                <div className="hidden lg:block">
-                    <Menu
-                        mode="horizontal"
-                        className="border-0 bg-transparent"
-                        style={{ color: '#ffffff' }}
-                        items={[
-                            { key: 'tools', label: <Link href="/">AI Tools</Link> },
-                            { key: 'categories', label: <Link href="/">Categories</Link> },
-                            { key: 'about', label: <Link href="/about">About</Link> },
-                            { key: 'contact', label: <Link href="/contact">Contact</Link> }
-                        ]}
-                        theme="dark"
-                    />
+        <div className="sticky top-0 z-50 ">
+            <nav className="backdrop-blur-md border-b bg-gray-900 border-gray-800">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between h-16">
+                        <div className="flex items-center">
+                            <motion.div
+                                className="text-2xl font-bold text-indigo-400"
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                AI Compass
+                            </motion.div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <Link
+                                href="/explore"
+                                className="px-3 py-2 rounded-md text-sm font-medium text-gray-200 hover:text-indigo-400 transition-colors"
+                            >
+                                Explore
+                            </Link>
+                            <Link
+                                href="/compare"
+                                className="px-3 py-2 rounded-md text-sm font-medium text-gray-200 hover:text-indigo-400 transition-colors"
+                            >
+                                Compare
+                            </Link>
+                            <Link
+                                href="/login"
+                                className="px-4 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all hover:shadow-md"
+                            >
+                                Sign In
+                            </Link>
+                        </div>
+                    </div>
                 </div>
-
-                <Space size="middle" className="ml-4">
-                    <Link href="/login">
-                        <Button type="text" style={{ color: '#ffffff' }}>Login</Button>
-                    </Link>
-                    <Link href="/signup">
-                        <Button
-                            type="primary"
-                            style={{
-                                background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
-                                border: 'none'
-                            }}
-                        >
-                            Sign Up
-                        </Button>
-                    </Link>
-                </Space>
-            </div>
-        </Header>
+            </nav>
+        </div>
     );
 };
 

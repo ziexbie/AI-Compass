@@ -1,11 +1,17 @@
 'use client';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import React from 'react'
+import React from 'react';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+
+const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
 
 const Login = () => {
-
     const loginForm = useFormik({
         initialValues: {
             email: '',
@@ -24,27 +30,51 @@ const Login = () => {
                 });
         }
     });
-    
+
     return (
-        <div className='mx-auto flex items-center justify-center min-h-screen' style={{ background: '#121212' }}>
-            <div className="mt-7 border border-gray-800 rounded-xl w-[30%] shadow-lg" style={{ background: '#1a1a1a' }}>
+        <div className='mx-auto flex items-center justify-center min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800'>
+            <div className="relative">
+                <motion.div
+                    className="absolute inset-0 -z-10 overflow-hidden"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1 }}
+                >
+                    <svg className="absolute left-[calc(50%-33rem)] top-9 -z-10 transform-gpu blur-3xl" aria-hidden="true" viewBox="0 0 1155 678">
+                        <path fill="url(#9b2541ea-d39d-499b-bd42-aeea3e93f5ff)" fillOpacity=".3" d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z" />
+                        <defs>
+                            <linearGradient id="9b2541ea-d39d-499b-bd42-aeea3e93f5ff" x1="1155.49" x2="-78.208" y1=".177" y2="474.645" gradientUnits="userSpaceOnUse">
+                                <stop stopColor="#9089FC" />
+                                <stop offset={1} stopColor="#FF80B5" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </motion.div>
+            </div>
+
+            <motion.div
+                className="mt-7 border border-gray-200 dark:border-gray-800 rounded-xl w-[30%] shadow-lg bg-white dark:bg-gray-800"
+                initial="hidden"
+                animate="visible"
+                variants={fadeIn}
+            >
                 <div className="p-4 sm:p-7">
                     <div className="text-center">
-                        <h1 className="block text-2xl font-bold text-white">Sign in</h1>
-                        <p className="mt-2 text-sm text-gray-400">
+                        <h1 className="block text-2xl font-bold text-gray-900 dark:text-white">Sign in</h1>
+                        <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                             Don't have an account yet?
-                            <a
-                                className="text-[#00FFFF] decoration-2 hover:underline focus:outline-hidden focus:underline font-medium ml-1"
+                            <Link
+                                className="text-indigo-600 dark:text-indigo-400 decoration-2 hover:underline focus:outline-none font-medium ml-1"
                                 href="/signup"
                             >
                                 Sign up here
-                            </a>
+                            </Link>
                         </p>
                     </div>
                     <div className="mt-5">
                         <button
                             type="button"
-                            className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-700 bg-gray-800 text-white shadow-2xs hover:bg-gray-700 focus:outline-hidden focus:bg-gray-700 disabled:opacity-50 disabled:pointer-events-none"
+                            className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 focus:outline-none disabled:opacity-50 disabled:pointer-events-none"
                         >
                             <svg
                                 className="w-4 h-auto"
@@ -72,7 +102,7 @@ const Login = () => {
                             </svg>
                             Sign in with Google
                         </button>
-                        <div className="py-3 flex items-center text-xs text-gray-500 uppercase before:flex-1 before:border-t before:border-gray-700 before:me-6 after:flex-1 after:border-t after:border-gray-700 after:ms-6">
+                        <div className="py-3 flex items-center text-xs text-gray-500 uppercase before:flex-1 before:border-t before:border-gray-200 dark:before:border-gray-700 before:me-6 after:flex-1 after:border-t after:border-gray-200 dark:after:border-gray-700 after:ms-6">
                             Or
                         </div>
                         {/* Form */}
@@ -80,7 +110,7 @@ const Login = () => {
                             <div className="grid gap-y-4">
                                 {/* Form Group */}
                                 <div>
-                                    <label htmlFor="email" className="block text-sm mb-2 text-white">
+                                    <label htmlFor="email" className="block text-sm mb-2 text-gray-800 dark:text-white">
                                         Email address
                                     </label>
                                     <div className="relative">
@@ -90,7 +120,7 @@ const Login = () => {
                                             name="email"
                                             onChange={loginForm.handleChange}
                                             value={loginForm.values.email}
-                                            className="py-2.5 sm:py-3 px-4 block w-full bg-gray-800 border-gray-700 text-white rounded-lg sm:text-sm focus:border-[#00FFFF] focus:ring-[#00FFFF] disabled:opacity-50 disabled:pointer-events-none"
+                                            className="py-2.5 sm:py-3 px-4 block w-full bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white rounded-lg sm:text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50 disabled:pointer-events-none"
                                             required=""
                                             aria-describedby="email-error"
                                         />
@@ -115,11 +145,11 @@ const Login = () => {
                                 {/* Form Group */}
                                 <div>
                                     <div className="flex flex-wrap justify-between items-center gap-2">
-                                        <label htmlFor="password" className="block text-sm mb-2 text-white">
+                                        <label htmlFor="password" className="block text-sm mb-2 text-gray-800 dark:text-white">
                                             Password
                                         </label>
                                         <a
-                                            className="inline-flex items-center gap-x-1 text-sm text-[#00FFFF] decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
+                                            className="inline-flex items-center gap-x-1 text-sm text-indigo-600 dark:text-indigo-400 decoration-2 hover:underline focus:outline-none font-medium"
                                             href="../examples/html/recover-account.html"
                                         >
                                             Forgot password?
@@ -132,7 +162,7 @@ const Login = () => {
                                             name="password"
                                             onChange={loginForm.handleChange}
                                             value={loginForm.values.password}
-                                            className="py-2.5 sm:py-3 px-4 block w-full bg-gray-800 border-gray-700 text-white rounded-lg sm:text-sm focus:border-[#00FFFF] focus:ring-[#00FFFF] disabled:opacity-50 disabled:pointer-events-none"
+                                            className="py-2.5 sm:py-3 px-4 block w-full bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white rounded-lg sm:text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50 disabled:pointer-events-none"
                                             required=""
                                             aria-describedby="password-error"
                                         />
@@ -161,30 +191,31 @@ const Login = () => {
                                             id="remember-me"
                                             name="remember-me"
                                             type="checkbox"
-                                            className="shrink-0 mt-0.5 border-gray-700 rounded-sm text-[#00FFFF] focus:ring-[#00FFFF]"
+                                            className="shrink-0 mt-0.5 border-gray-200 dark:border-gray-700 rounded-sm text-indigo-600 focus:ring-indigo-500"
                                         />
                                     </div>
                                     <div className="ms-3">
-                                        <label htmlFor="remember-me" className="text-sm text-white">
+                                        <label htmlFor="remember-me" className="text-sm text-gray-800 dark:text-white">
                                             Remember me
                                         </label>
                                     </div>
                                 </div>
                                 {/* End Checkbox */}
-                                <button
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
                                     type="submit"
-                                    className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gradient-to-r from-[#00FFFF] to-[#FF00FF] text-white hover:opacity-90 focus:outline-hidden focus:opacity-90 disabled:opacity-50 disabled:pointer-events-none"
+                                    className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 focus:outline-none shadow-sm hover:shadow-md transition-all disabled:opacity-50 disabled:pointer-events-none"
                                 >
                                     Sign in
-                                </button>
+                                </motion.button>
                             </div>
                         </form>
                         {/* End Form */}
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
-
     )
 }
 

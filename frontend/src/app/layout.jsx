@@ -6,6 +6,8 @@ import { Toaster } from 'react-hot-toast';
 import SmoothScroll from '@/components/SmoothScroll';
 // import SplineLoader from '../components/UI/SplineLoader';
 import './globals.css';
+import Footer from '@/components/UI/Footer';
+// import Navbar from '@/components/UI/Navbar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -43,6 +45,7 @@ export default function RootLayout({ children }) {
         <Toaster position="top-right" />
         <SmoothScroll>
           {children}
+          <Footer />
         </SmoothScroll>
       </body>
     </html>
