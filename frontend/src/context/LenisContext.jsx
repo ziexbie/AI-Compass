@@ -1,7 +1,7 @@
 'use client';
 
 import Lenis from 'lenis';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 
 // Create context
 export const LenisContext = createContext(null);
@@ -18,23 +18,26 @@ export const useLenis = () => {
 // Provider component
 export const LenisProvider = ({ children, options = {} }) => {
     const [lenis, setLenis] = useState(null);
+    const optionsRef = useRef(options);
 
     useEffect(() => {
         // Default options
         const defaultOptions = {
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            duration: 1.5,
+            easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
             direction: 'vertical',
             gestureDirection: 'vertical',
             smooth: true,
-            smoothTouch: false,
-            touchMultiplier: 2,
+            smoothTouch: true,
+            touchMultiplier: 1.5,
+            wheelMultiplier: 1.0,
+            lerp: 0.1, // Linear interpolation value for smoother transitions
         };
 
         // Initialize Lenis with merged options
         const lenisInstance = new Lenis({
             ...defaultOptions,
-            ...options,
+            ...optionsRef.current,
         });
 
         // Set up RAF
@@ -52,7 +55,7 @@ export const LenisProvider = ({ children, options = {} }) => {
         return () => {
             lenisInstance.destroy();
         };
-    }, [options]);
+    }, []); // Empty dependency array - only run once
 
     return (
         <LenisContext.Provider value={lenis}>

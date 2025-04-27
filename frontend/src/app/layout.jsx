@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import SmoothScroll from '@/components/SmoothScroll';
-import SplineLoader from '../components/UI/SplineLoader';
+// import SplineLoader from '../components/UI/SplineLoader';
 import './globals.css';
 
 const geistSans = Geist({
@@ -26,27 +26,24 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
+      setFadeInApp(true);
     }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  const handleLoaderComplete = () => {
+  function handleLoaderComplete() {
     setLoading(false);
     setFadeInApp(true);
-  };
+  }
 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased transition-opacity duration-700 ${fadeInApp ? 'opacity-100' : 'opacity-0'}`}>
         <Toaster position="top-right" />
-        {loading ? (
-          <SplineLoader onComplete={handleLoaderComplete} />
-        ) : (
-          <SmoothScroll>
-            {children}
-          </SmoothScroll>
-        )}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

@@ -1,85 +1,90 @@
-// components/SplineLoader.jsx
+// // components/SplineLoader.jsx
 
-'use client';
+// 'use client';
 
-import { useState, useEffect } from 'react';
-import Spline from '@splinetool/react-spline/next';
+// import { useState, useEffect } from 'react';
+// import dynamic from 'next/dynamic';
 
-const SplineLoader = ({ onComplete }) => {
-    const [progress, setProgress] = useState(0);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [fadeOut, setFadeOut] = useState(false);
-    const [fadeIn, setFadeIn] = useState(false);
-    const [shouldRender, setShouldRender] = useState(true);
+// // Create a separate component that renders a placeholder instead of Spline
+// const SplineScene = dynamic(() => import('./SplineScene'), {
+//     ssr: false,
+//     loading: () => <div className="w-full h-full bg-white"></div>
+// });
 
-    const onSplineLoad = () => {
-        setIsLoaded(true);
-    };
+// const SplineLoader = ({ onComplete }) => {
+//     const [progress, setProgress] = useState(0);
+//     const [isLoaded, setIsLoaded] = useState(false);
+//     const [fadeOut, setFadeOut] = useState(false);
+//     const [fadeIn, setFadeIn] = useState(false);
+//     const [shouldRender, setShouldRender] = useState(true);
 
-    useEffect(() => {
-        const timeout = setTimeout(() => setFadeIn(true), 100);
-        return () => clearTimeout(timeout);
-    }, []);
+//     const handleSplineLoad = () => {
+//         setIsLoaded(true);
+//     };
 
-    useEffect(() => {
-        if (isLoaded && progress >= 100) {
-            const timeout = setTimeout(() => setFadeOut(true), 500);
-            return () => clearTimeout(timeout);
-        }
-    }, [isLoaded, progress]);
+//     useEffect(() => {
+//         const timeout = setTimeout(() => setFadeIn(true), 100);
+//         return () => clearTimeout(timeout);
+//     }, []);
 
-    useEffect(() => {
-        if (fadeOut) {
-            const timeout = setTimeout(() => {
-                setShouldRender(false);
-                if (onComplete) {
-                    onComplete();
-                }
-            }, 700); // Match transition duration
-            return () => clearTimeout(timeout);
-        }
-    }, [fadeOut, onComplete]);
+//     useEffect(() => {
+//         if (isLoaded && progress >= 100) {
+//             const timeout = setTimeout(() => setFadeOut(true), 500);
+//             return () => clearTimeout(timeout);
+//         }
+//     }, [isLoaded, progress]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setProgress(prev => {
-                if (prev >= 100 || isLoaded) {
-                    clearInterval(interval);
-                    return 100;
-                }
-                return prev + 2;
-            });
-        }, 100);
+//     useEffect(() => {
+//         if (fadeOut) {
+//             const timeout = setTimeout(() => {
+//                 setShouldRender(false);
+//                 if (onComplete) {
+//                     onComplete();
+//                 }
+//             }, 700); // Match transition duration
+//             return () => clearTimeout(timeout);
+//         }
+//     }, [fadeOut, onComplete]);
 
-        return () => clearInterval(interval);
-    }, [isLoaded]);
+//     useEffect(() => {
+//         const interval = setInterval(() => {
+//             setProgress(prev => {
+//                 if (prev >= 100 || isLoaded) {
+//                     clearInterval(interval);
+//                     return 100;
+//                 }
+//                 return prev + 2;
+//             });
+//         }, 100);
 
-    if (!shouldRender) return null;
+//         return () => clearInterval(interval);
+//     }, [isLoaded]);
 
-    return (
-        <div
-            className={`fixed inset-0 bg-white flex flex-col items-center justify-center z-50 transition-opacity duration-700 ${fadeIn ? 'opacity-100' : 'opacity-0'} ${fadeOut ? 'opacity-0' : ''}`}
-        >
-            <div className="absolute inset-0 z-0">
-                <Spline
-                    scene="https://prod.spline.design/a8oGYu4bEu5OxIdn/scene.splinecode"
-                    onLoad={onSplineLoad}
-                />
-            </div>
+//     if (!shouldRender) return null;
 
-            <div className="z-10 bg-white bg-opacity-60 p-6 rounded-lg shadow-lg text-center">
-                <div className="w-64 bg-gray-200 rounded-full h-2.5 mb-4 overflow-hidden">
-                    <div
-                        className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out"
-                        style={{ width: `${progress}%` }}
-                    ></div>
-                </div>
-                <p className="text-gray-800 font-medium">
-                    {isLoaded ? 'Preparing your experience...' : 'Loading 3D elements...'} {progress}%
-                </p>
-            </div>
-        </div>
-    );
-};
+//     return (
+//         <div
+//             className={`fixed inset-0 bg-white flex flex-col items-center justify-center z-50 transition-opacity duration-700 ${fadeIn ? 'opacity-100' : 'opacity-0'} ${fadeOut ? 'opacity-0' : ''}`}
+//         >
+//             <div className="absolute inset-0 z-0">
+//                 <div className="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+//                     <div className="text-white text-2xl font-bold">Loading Experience</div>
+//                 </div>
+//             </div>
 
-export default SplineLoader;
+//             <div className="z-10 bg-white bg-opacity-60 p-6 rounded-lg shadow-lg text-center">
+//                 <div className="w-64 bg-gray-200 rounded-full h-2.5 mb-4 overflow-hidden">
+//                     <div
+//                         className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out"
+//                         style={{ width: `${progress}%` }}
+//                     ></div>
+//                 </div>
+//                 <p className="text-gray-800 font-medium">
+//                     {isLoaded ? 'Preparing your experience...' : 'Loading...'} {progress}%
+//                 </p>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default SplineLoader;
