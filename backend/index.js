@@ -1,5 +1,8 @@
 const express = require('express');
+const path = require('path');
 const UserRouter = require('./routers/userRouter');
+const RatingRouter = require('./routers/ratingRouter');
+const ToolRouter = require('./routers/toolRouter');
 const cors = require('cors');
 
 //creating new expess app
@@ -11,7 +14,12 @@ const port = 5000;
 //middleware
 app.use(cors({origin: '*'}));
 app.use(express.json());
-app.use('/user', UserRouter)
+app.use('/user', UserRouter);
+app.use('/rating', RatingRouter);
+app.use('/tool', ToolRouter);
+
+// Serve static files from uploads directory
+
 
 //routes or endpoints
 

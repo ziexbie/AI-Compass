@@ -5,6 +5,8 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 
 const fadeIn = {
     hidden: { opacity: 0, y: 20 },
@@ -12,6 +14,9 @@ const fadeIn = {
 };
 
 const Login = () => {
+
+    const router = useRouter();
+
     const loginForm = useFormik({
         initialValues: {
             email: '',
@@ -24,6 +29,7 @@ const Login = () => {
                 .then((response) => {
                     toast.success('Login Successful');
                     localStorage.setItem('user', JSON.stringify(response.data));
+                    router.push('/');
                 }).catch((err) => {
                     console.log(err);
                     toast.error('Login Failed');
