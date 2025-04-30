@@ -50,25 +50,23 @@ router.delete('/delete/:id', async (req, res) => {
   }
 });
 
-router.put('/update/:id', (req, res) => {
-  Model.findByIdAndUpdate(req.params.id, req.body, {new: true})
-      .then((result) => {
-          res.status(200).json(result);
-      }).catch((err) => {
-          res.status(500).json({message: 'Internal Server Error'});
-          console.log(err);
-      });
-  });
-
-
-
-
-
-        
- 
-
-
-
-
+router.put('/update/:id', async (req, res) => {
+  try {
+    const updatedTool = await Model.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    
+    if (!updatedTool) {
+      return res.status(404).json({ message: 'Tool not found' });
+    }
+    
+    res.status(200).json(updatedTool);
+  } catch (err) {
+    console.error('Error updating tool:', err);
+    res.status(500).json({ message: 'Failed to update tool' });
+  }
+});
 
 module.exports = router;

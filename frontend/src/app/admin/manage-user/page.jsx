@@ -63,19 +63,16 @@ const ManageUsers = () => {
                                                     <td className='p-2'>{user.name}</td>
                                                     <td className='p-2'>{user.email}</td>
                                                     <td className='p-2'>{user.createdAt}</td>
-                                                    <td className='p-2 '>
-                                                        <button onClick={()=>{deleteUser(user._id)}} className='bg-red-700 text-white px-4 py-2 rounded-lg m-2'>
-                                                        <IconTrashXFilled/>
+                                                    <td className='p-2'>
+                                                        <button onClick={() => {deleteUser(user._id)}} className='bg-red-700 text-white px-4 py-2 rounded-lg m-2'>
+                                                            <IconTrashXFilled/>
                                                         </button>
                                                         <button className='bg-green-700 text-white px-4 py-2 rounded-lg m-2'>
-                                                            <Link href={`/update-user/${user._id}`} >
-                                                            <IconPencilCheck/>
+                                                            <Link href={`/admin/update-user?id=${user._id}`}>
+                                                                <IconPencilCheck/>
                                                             </Link>
-                                                        
                                                         </button>
                                                     </td>
-                                                        
-
                                                 </tr>
                                             )
                                         })

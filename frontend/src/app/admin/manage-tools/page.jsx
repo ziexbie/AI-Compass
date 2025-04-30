@@ -116,7 +116,7 @@ const ManageTools = () => {
                           <IconTrashFilled size={20} />
                         </button>
                         <Link
-                          href={`/admin/edit-tool/${tool._id}`}
+                            href={`/admin/update-tools?id=${tool._id}`}
                           className="p-2 text-blue-400 hover:text-blue-600 transition-colors"
                           title="Edit"
                         >
