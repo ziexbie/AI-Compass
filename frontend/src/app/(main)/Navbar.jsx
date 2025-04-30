@@ -22,13 +22,13 @@ const Navbar = () => {
                         </div>
                         <div className="flex items-center space-x-4">
                             <Link
-                                href="/explore"
+                                href="/browse-tools"
                                 className="px-3 py-2 rounded-md text-sm font-medium text-gray-200 hover:text-indigo-400 transition-colors"
                             >
                                 Explore
                             </Link>
                             <Link
-                                href="/compare"
+                                href="/compare-tools"
                                 className="px-3 py-2 rounded-md text-sm font-medium text-gray-200 hover:text-indigo-400 transition-colors"
                             >
                                 Compare
