@@ -72,19 +72,19 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-4">
               <Link
-                href="/explore"
+                href="/browse-tools"
                 className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400 transition-colors"
               >
                 Explore
               </Link>
               <Link
-                href="/compare"
+                href="/compare-tools"
                 className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400 transition-colors"
               >
                 Compare
               </Link>
               <Link
-                href="/dashboard"
+                href="/login"
                 className="px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-sm transition-all hover:shadow-md"
               >
                 Sign In
