@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { IconSearch, IconFilter } from '@tabler/icons-react';
+import Link from 'next/link';
 
 const BrowseTools = () => {
   const [tools, setTools] = useState([]);
@@ -157,15 +158,20 @@ const BrowseTools = () => {
                   )}
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-2">{tool.name}</h3>
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-bold text-white">{tool.name}</h3>
+                  </div>
                   <p className="text-gray-400 mb-4 line-clamp-2">{tool.description}</p>
                   <div className="flex items-center justify-between">
                     <span className="px-3 py-1 bg-gray-700 rounded-full text-sm text-gray-300">
                       {tool.category}
                     </span>
-                    <button className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all">
+                    <Link 
+                      href={`/tool-detail/${tool._id}`} 
+                      className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all"
+                    >
                       View Details
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </motion.div>
