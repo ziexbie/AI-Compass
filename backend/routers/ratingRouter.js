@@ -1,77 +1,61 @@
 const express = require('express');
-const Model = require('../models/ratingModel'); //impra
-require('dotenv').config();
-
 const router = express.Router();
+const Rating = require('../models/ratingModel');
+const Tool = require('../models/toolModel'); 
 
-router.post('/add', (req, res) => {
-    console.log(req.body);
-
-    new Model(req.body).save()
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
-            console.log(err);
-            if (err.code === 11000) {
-                res.status(400).json({ message: 'User Email Already Exists' });
-            }
-            else {
-                res.status(500).json({ message: 'Internal Server Error' });
-            }
-        });
-})
-
-router.get('/getall', (req, res) => {
-
-    Model.find()
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
-            res.status(500).json({ message: 'Internal Server Error' });
-            console.log(err);
-        });
-
-})
-
-router.get('/getbyid/:id', (req,res) => {
-    Model.findById(req.params.id)
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
-            res.status(500).json({message: 'Internal Server Error'});
-            console.log(err);
-        });
-})
-
-router.delete('/delete/:id', (req, res) => {
-   Model.findByIdAndDelete(req.params.id)
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
-            res.status(500).json({message: 'Internal Server Error'});
-            console.log(err);
-        });
-})
-
-router.put('/update/:id', (req, res) => {
-    Model.findByIdAndUpdate(req.params.id, req.body, {new: true})
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
-            res.status(500).json({message: 'Internal Server Error'});
-            console.log(err);
-        });
-    });
-
-
-
-
-
+// Add new review
+router.post('/add', async (req, res) => {
+    try {
+        const { toolId, rating, comment, userId } = req.body;
         
- 
+        // Validate input
+        if (!toolId || !rating || !userId) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
 
+        const newRating = new Rating({
+            tool: toolId,
+            user: userId,
+            rating,
+            comment: comment || '' // Handle optional comment
+        });
 
+        const savedRating = await newRating.save();
 
+        // Update tool's average rating
+        const allRatings = await Rating.find({ tool: toolId });
+        const avgRating = allRatings.reduce((acc, curr) => acc + curr.rating, 0) / allRatings.length;
+        
+        await Tool.findByIdAndUpdate(toolId, { rating: avgRating });
 
+        res.status(201).json(savedRating);
+    } catch (err) {
+        console.error('Rating submission error:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get reviews by extension
+router.get('/bytool/:id', async (req, res) => {
+    try {
+        const reviews = await Rating.find({ tool: req.params.id })
+            .populate('user', 'name email')
+            .sort({ createdAt: -1 });
+        res.status(200).json(reviews);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Get average rating for extension
+router.get('/average/:id', async (req, res) => {
+    try {
+        const reviews = await Rating.find({ tool: req.params.id });
+        const avgRating = reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length || 0;
+        res.status(200).json({ averageRating: avgRating });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 module.exports = router;

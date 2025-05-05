@@ -1,11 +1,25 @@
-const { Schema, model, Types } = require('../connection');
+const mongoose = require('mongoose');
 
-const ratingSchema = new Schema({
-  toolId: { type: Types.ObjectId, ref: "Tool", required: true },
-  userId: { type: Types.ObjectId, ref: "User", required: true },
-  rating: { type: Number, required: true },
-  comment: String,
-  createdAt: { type: Date, default: Date.now }
-});
+const ratingSchema = new mongoose.Schema({
+    tool: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tool',
+        required: true
+    },
+    user: {
+        type: String, // Changed to String for now since we're using hardcoded ID
+        required: true
+    },
+    rating: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 5
+    },
+    comment: {
+        type: String,
+        required: false // Make it optional
+    }
+}, { timestamps: true });
 
-module.exports = model("Ratings", ratingSchema);
+module.exports = mongoose.model('Rating', ratingSchema);
