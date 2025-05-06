@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
+import { jwtDecode } from 'jwt-decode';
 
 const fadeIn = {
     hidden: { opacity: 0, y: 20 },
@@ -26,9 +26,21 @@ const Login = () => {
             axios.post('http://localhost:5000/user/authenticate', values)
                 .then((response) => {
                     if (response.data.token) {
-                        localStorage.setItem('user', response.data.token);
+                        // Store token with consistent key name
+                        localStorage.setItem('token', response.data.token);
+                        
+                        // Decode token to check user role
+                        const decodedToken = jwtDecode(response.data.token);
+                        const userRole = decodedToken.role;
+                        
                         toast.success('Login Successful');
-                        router.push('/');
+                        
+                        // Redirect based on user role
+                        if (userRole === 'admin') {
+                            router.push('/admin');
+                        } else {
+                            router.push('/user/profile');
+                        }
                     } else {
                         toast.error('Login failed - no token received');
                     }

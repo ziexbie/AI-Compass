@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Bookmark = require('../models/bookmark');
-// const Tool = require('../models/toolModel');
+const Bookmark = require('../models/bookmarkModel');
+const Tool = require('../models/toolModel');
 
 // Add bookmark
 router.post('/add', async (req, res) => {
@@ -71,7 +71,7 @@ router.get('/user/:userId', async (req, res) => {
         const bookmarks = await Bookmark.find({ userId })
             .populate({
                 path: 'toolId',
-                model: 'Tool',
+                model: 'Tools',  // Changed from 'Tool' to 'Tools' to match the registered model name
                 select: 'name description category logo rating'
             })
             .lean(); // Convert to plain JavaScript objects

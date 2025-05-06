@@ -15,7 +15,10 @@ const app = express();
 const port = 5000;
 
 //middleware
-app.use(cors({origin: '*'}));
+app.use(cors({
+    origin: '*',
+    credentials: true
+}));
 app.use(express.json());
 app.use('/user', UserRouter);
 app.use('/rating', RatingRouter);

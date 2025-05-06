@@ -5,22 +5,16 @@ require('dotenv').config();
 
 const router = express.Router();
 
+// Add role field to user registration route
 router.post('/add', (req, res) => {
-    console.log(req.body);
-
     new Model(req.body).save()
         .then((result) => {
-            res.status(200).json(result);
+            res.json(result);
         }).catch((err) => {
-            console.log(err);
-            if (err.code === 11000) {
-                res.status(400).json({ message: 'User Email Already Exists' });
-            }
-            else {
-                res.status(500).json({ message: 'Internal Server Error' });
-            }
+            console.error(err);
+            res.status(500).json(err);
         });
-})
+});
 
 router.get('/getall', (req, res) => {
 
@@ -34,60 +28,53 @@ router.get('/getall', (req, res) => {
 
 })
 
-router.get('/getbyid/:id', (req,res) => {
+router.get('/getbyid/:id', (req, res) => {
     Model.findById(req.params.id)
         .then((result) => {
             res.status(200).json(result);
         }).catch((err) => {
-            res.status(500).json({message: 'Internal Server Error'});
+            res.status(500).json({ message: 'Internal Server Error' });
             console.log(err);
         });
 })
 
 router.delete('/delete/:id', (req, res) => {
-   Model.findByIdAndDelete(req.params.id)
+    Model.findByIdAndDelete(req.params.id)
         .then((result) => {
             res.status(200).json(result);
         }).catch((err) => {
-            res.status(500).json({message: 'Internal Server Error'});
+            res.status(500).json({ message: 'Internal Server Error' });
             console.log(err);
         });
 })
 
+// Update to include role field when updating user
 router.put('/update/:id', (req, res) => {
-    Model.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    Model.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((result) => {
-            res.status(200).json(result);
+            res.json(result);
         }).catch((err) => {
-            res.status(500).json({message: 'Internal Server Error'});
-            console.log(err);
+            console.error(err);
+            res.status(500).json(err);
         });
-    });
+});
 
-
-
-
+// Make sure authenticate returns role in token
 router.post('/authenticate', (req, res) => {
     Model.findOne(req.body)
-        .then((result) => {
-            if (result) {
-                // email and password matched
-                const { _id, email, name, role } = result;
-                const payload = { _id, email, name, role };
-
+        .then((userdata) => {
+            if (userdata) {
+                const payload = { _id: userdata._id, email: userdata.email, role: userdata.role };
                 jwt.sign(
                     payload,
-                    process.env.JWT_SECRET,
-                    { expiresIn: '1d' },
+                    process.env.JWT_SECRET || 'fallbacksecretkey',
+                    { expiresIn: '24h' },
                     (err, token) => {
                         if (err) {
-                            console.error('Token generation error:', err);
-                            res.status(500).json({ message: 'Error generating token' });
+                            console.error(err);
+                            res.status(500).json(err);
                         } else {
-                            res.status(200).json({ 
-                                message: 'Login successful',
-                                token: token 
-                            });
+                            res.status(200).json({ token: token });
                         }
                     }
                 );
@@ -96,11 +83,10 @@ router.post('/authenticate', (req, res) => {
             }
         })
         .catch((err) => {
-            console.error('Authentication error:', err);
-            res.status(500).json({ message: 'Internal server error' });
+            console.error(err);
+            res.status(500).json(err);
         });
 });
-
 
 router.get('/count', async (req, res) => {
     try {
@@ -110,9 +96,5 @@ router.get('/count', async (req, res) => {
         res.status(500).json({ error: 'Failed to get tool count' });
     }
 });
-
-
-
-
 
 module.exports = router;

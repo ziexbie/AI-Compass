@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 const Navbar = () => {
   const [userName, setUserName] = useState('');
@@ -10,11 +11,29 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      setUserName(decodedToken.name);
-    }
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          
+          // First, try to use the user's email from the token as a fallback
+          setUserName(decodedToken.email);
+          
+          // Then fetch the user's full profile to get their name
+          if (decodedToken._id) {
+            const response = await axios.get(`http://localhost:5000/user/getbyid/${decodedToken._id}`);
+            if (response.data && response.data.name) {
+              setUserName(response.data.name);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   const handleLogout = () => {
