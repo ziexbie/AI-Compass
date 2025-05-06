@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { IconArrowRight } from '@tabler/icons-react'
+import { jwtDecode } from 'jwt-decode'
 
 // AI tool comparison data
 const aiTools = [
@@ -52,11 +53,28 @@ const staggerContainer = {
 }
 
 export default function Home() {
-
   const [hoveredTool, setHoveredTool] = useState(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userRole, setUserRole] = useState(null)
+
+  useEffect(() => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token')
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token)
+        setIsLoggedIn(true)
+        setUserRole(decodedToken.role)
+      } catch (error) {
+        console.error('Invalid token:', error)
+        localStorage.removeItem('token')
+      }
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800">
+    
       {/* Navigation */}
       <nav className="backdrop-blur-md bg-white/80 dark:bg-gray-900/80 sticky top-0 z-10 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -84,12 +102,21 @@ export default function Home() {
               >
                 Compare
               </Link>
-              <Link
-                href="/login"
-                className="px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-sm transition-all hover:shadow-md"
-              >
-                Sign In
-              </Link>
+              {isLoggedIn ? (
+                <Link
+                  href={userRole === 'admin' ? '/admin/profile' : '/user/profile'}
+                  className="px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-sm transition-all hover:shadow-md"
+                >
+                  Profile
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-sm transition-all hover:shadow-md"
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </div>
         </div>
