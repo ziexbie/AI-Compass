@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import jwt_decode from 'jwt-decode';
+import { jwt_decode } from 'jwt-decode';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
