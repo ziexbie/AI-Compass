@@ -1,35 +1,36 @@
 const express = require('express');
 const router = express.Router();
-const Bookmark = require('../models/bookmark');
-const Tool = require('../models/toolModel'); // Make sure to import Tool model
+const Bookmark = require('../models/bookmarkModel');
+// const Tool = require('../models/toolModel');
 
 // Add bookmark
 router.post('/add', async (req, res) => {
+    console.log('Received request to add bookmark:', req.body); // Debug log
     try {
         const { userId, toolId } = req.body;
 
         // Check if bookmark already exists
         const existingBookmark = await Bookmark.findOne({ userId, toolId });
         if (existingBookmark) {
-            return res.status(200).json({ 
+            return res.status(200).json({
                 message: 'Tool already bookmarked',
-                isBookmarked: true 
+                isBookmarked: true
             });
         }
 
         // Create new bookmark
         const bookmark = new Bookmark({ userId, toolId });
         await bookmark.save();
-        
-        res.status(201).json({ 
+
+        res.status(201).json({
             message: 'Tool bookmarked successfully',
-            isBookmarked: true 
+            isBookmarked: true
         });
     } catch (error) {
         console.error('Bookmark error:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             error: 'Failed to bookmark tool',
-            details: error.message 
+            details: error.message
         });
     }
 });
@@ -64,28 +65,32 @@ router.get('/check/:userId/:toolId', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        
-        // Find all bookmarks for the user
-        const bookmarks = await Bookmark.find({ userId }).populate({
-            path: 'toolId',
-            model: 'Tool',
-            select: 'name description category logo rating'
-        });
+        console.log('Fetching bookmarks for user:', userId); // Debug log
 
-        // Check if bookmarks exist
-        if (!bookmarks) {
-            return res.status(404).json({ message: 'No bookmarks found' });
-        }
+        // Find bookmarks and populate tool details
+        const bookmarks = await Bookmark.find({ userId })
+            .populate({
+                path: 'toolId',
+                model: 'Tool',
+                select: 'name description category logo rating'
+            })
+            .lean(); // Convert to plain JavaScript objects
 
-        // Extract tool data from bookmarks
-        const tools = bookmarks.map(bookmark => bookmark.toolId).filter(tool => tool !== null);
+        console.log('Found bookmarks:', bookmarks); // Debug log
 
+        // Extract and filter valid tool data
+        const tools = bookmarks
+            .filter(bookmark => bookmark.toolId)
+            .map(bookmark => bookmark.toolId);
+
+        console.log('Returning tools:', tools); // Debug log
         res.status(200).json(tools);
     } catch (error) {
-        console.error('Error fetching bookmarks:', error);
-        res.status(500).json({ 
-            error: 'Failed to fetch bookmarks',
-            details: error.message 
+        console.error('Bookmark fetch error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch bookmarked tools',
+            details: error.message
         });
     }
 });

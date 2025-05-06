@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { IconBrandGithub, IconGlobe, IconShare, IconChartBar, IconApi, IconDeviceLaptop, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import StarRating from '@/components/StarRating';
+import { jwtDecode } from 'jwt-decode';
 
 const ViewTool = () => {
     const [tool, setTool] = useState(null);
@@ -16,6 +17,12 @@ const ViewTool = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [ratings, setRatings] = useState([]);
     const [isBookmarked, setIsBookmarked] = useState(false);
+
+
+
+    const token = localStorage.getItem('user');
+    const decodedToken = jwtDecode(token); // Fixed function name
+    // console.log('Decoded token:', decodedToken); // Debug log
 
     const fetchToolDetails = async () => {
         try {
@@ -39,9 +46,9 @@ const ViewTool = () => {
         }
     };
 
-    const checkBookmarkStatus = async () => {
+    const checkBookmarkStatus =  async () => {
         try {
-            const userId = '12345'; // Replace with actual user ID from auth
+            const userId = decodedToken._id; // Replace with actual user ID from auth
             const response = await axios.get(`http://localhost:5000/bookmark/check/${userId}/${id}`);
             setIsBookmarked(response.data.isBookmarked);
         } catch (error) {
@@ -52,7 +59,8 @@ const ViewTool = () => {
 
     const handleBookmarkToggle = async () => {
         try {
-            const userId = '12345'; // Replace with actual user ID from auth
+            const userId = decodedToken._id; // Replace with actual user ID from auth
+            // console.log('User ID:', userId); // Debug log
 
             if (isBookmarked) {
                 // Remove bookmark
@@ -64,9 +72,10 @@ const ViewTool = () => {
                 const response = await axios.post('http://localhost:5000/bookmark/add', {
                     userId,
                     toolId: id
+                    
                 });
-                
                 setIsBookmarked(true);
+                console.log('Bookmark response:', response.data); // Debug log
                 toast.success(response.data.message || 'Added to bookmarks');
             }
         } catch (error) {
@@ -88,7 +97,7 @@ const ViewTool = () => {
                 toolId: id,
                 rating: userRating,
                 comment: feedback.trim() || undefined, // Only send if there's content
-                userId: '12345' // Will need to be replaced with actual user ID
+                userId: decodedToken._id // Will need to be replaced with actual user ID
             });
 
             if (response.data) {

@@ -67,37 +67,40 @@ router.put('/update/:id', (req, res) => {
 
 
 
-router.post('/authenticate', (req,res)=> {
+router.post('/authenticate', (req, res) => {
     Model.findOne(req.body)
-    .then((result) => {
-        if(result){
-            //email and password matched
-            //generate token
-            const {_id,email,password}  = result;
-            const payload = { _id,email,password};
+        .then((result) => {
+            if (result) {
+                // email and password matched
+                const { _id, email, name, role } = result;
+                const payload = { _id, email, name, role };
 
-            jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:'1d'},(err,token)=>
-           {
-            if(err){
-                console.log(err);
-                res.status(500).json(err);
+                jwt.sign(
+                    payload,
+                    process.env.JWT_SECRET,
+                    { expiresIn: '1d' },
+                    (err, token) => {
+                        if (err) {
+                            console.error('Token generation error:', err);
+                            res.status(500).json({ message: 'Error generating token' });
+                        } else {
+                            res.status(200).json({ 
+                                message: 'Login successful',
+                                token: token 
+                            });
+                        }
+                    }
+                );
+            } else {
+                res.status(400).json({ message: 'Invalid email or password' });
             }
-                else
-                {
-                    
-                    res.status(200).json(token)
-                }
-            
-           } )
-        }else{
-            //email and password not matched
-            res.status(400).json({message:'Invalid email or password'})
-        }
-        
-    }).catch((err) => {
-        
-    });
-})
+        })
+        .catch((err) => {
+            console.error('Authentication error:', err);
+            res.status(500).json({ message: 'Internal server error' });
+        });
+});
+
 
 router.get('/count', async (req, res) => {
     try {

@@ -23,16 +23,18 @@ const Login = () => {
             password: ''
         },
         onSubmit: (values) => {
-            console.log(values);
-
             axios.post('http://localhost:5000/user/authenticate', values)
                 .then((response) => {
-                    toast.success('Login Successful');
-                    localStorage.setItem('user', JSON.stringify(response.data));
-                    router.push('/');
+                    if (response.data.token) {
+                        localStorage.setItem('user', response.data.token);
+                        toast.success('Login Successful');
+                        router.push('/');
+                    } else {
+                        toast.error('Login failed - no token received');
+                    }
                 }).catch((err) => {
-                    console.log(err);
-                    toast.error('Login Failed');
+                    console.error('Login error:', err);
+                    toast.error(err.response?.data?.message || 'Login Failed');
                 });
         }
     });

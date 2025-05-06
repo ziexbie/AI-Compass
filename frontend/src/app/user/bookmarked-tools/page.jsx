@@ -4,26 +4,34 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
 import { IconStarFilled } from '@tabler/icons-react';
+import { jwtDecode } from 'jwt-decode'; // Fixed typo in import
 
 const BookmarksPage = () => {
     const [bookmarkedTools, setBookmarkedTools] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const token = localStorage.getItem('user');
+    const decodedToken = jwtDecode(token); // Fixed function name
+
     const fetchBookmarkedTools = async () => {
         try {
             setLoading(true);
             setError(null);
-            const userId = '12345'; // Replace with actual user ID from auth
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/bookmark/user/${userId}`);
+            const userId = decodedToken._id; // Replace with actual user ID from auth
             
-            if (!response.data) {
+            // Use direct URL instead of environment variable for testing
+            const response = await axios.get(`http://localhost:5000/bookmark/user/${userId}`);
+            
+            // Check if response exists and has data
+            if (!response || !response.data) {
                 throw new Error('No data received from server');
             }
 
+            console.log('Fetched bookmarks:', response.data); // Debug log
             setBookmarkedTools(response.data);
         } catch (error) {
-            console.error('Error fetching bookmarks:', error);
+            console.error('Detailed error:', error); // Detailed error logging
             setError(error.response?.data?.error || 'Failed to fetch bookmarked tools');
             toast.error(error.response?.data?.error || 'Failed to fetch bookmarked tools');
         } finally {
