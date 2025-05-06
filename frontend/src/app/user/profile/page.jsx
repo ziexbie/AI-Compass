@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -18,11 +18,11 @@ const Profile = () => {
           return;
         }
 
-        const decodedToken = jwt_decode(token);
+        const decodedToken = jwtDecode(token);
         const userId = decodedToken._id;
 
-        // Fetch user data
-        const userResponse = await axios.get(`http://localhost:5000/user/${userId}`);
+        // Fetch user data - use the correct endpoint
+        const userResponse = await axios.get(`http://localhost:5000/user/getbyid/${userId}`);
         setUser(userResponse.data);
 
         // Fetch bookmarked tools
@@ -63,6 +63,10 @@ const Profile = () => {
               <p className="text-lg text-gray-900">{user?.email}</p>
             </div>
             <div>
+              <p className="text-sm font-medium text-gray-500">Role</p>
+              <p className="text-lg text-gray-900 capitalize">{user?.role || 'user'}</p>
+            </div>
+            <div>
               <p className="text-sm font-medium text-gray-500">Member Since</p>
               <p className="text-lg text-gray-900">
                 {new Date(user?.createdAt).toLocaleDateString()}
@@ -84,7 +88,7 @@ const Profile = () => {
                     <div className="flex items-center mb-4">
                       {tool.logo && (
                         <img
-                          src={`http://localhost:5000/${tool.logo}`}
+                          src={tool.logo}
                           alt={tool.name}
                           className="w-12 h-12 object-cover rounded-full"
                         />

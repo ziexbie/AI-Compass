@@ -4,21 +4,27 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
 import { IconStarFilled } from '@tabler/icons-react';
-import { jwtDecode } from 'jwt-decode'; // Fixed typo in import
+import { jwtDecode } from 'jwt-decode';
 
 const BookmarksPage = () => {
     const [bookmarkedTools, setBookmarkedTools] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const token = localStorage.getItem('user');
-    const decodedToken = jwtDecode(token); // Fixed function name
-
     const fetchBookmarkedTools = async () => {
         try {
             setLoading(true);
             setError(null);
-            const userId = decodedToken._id; // Replace with actual user ID from auth
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                toast.error('Please login first');
+                // You might want to redirect to login page here
+                return;
+            }
+            
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken._id;
             
             // Use direct URL instead of environment variable for testing
             const response = await axios.get(`http://localhost:5000/bookmark/user/${userId}`);
@@ -28,7 +34,6 @@ const BookmarksPage = () => {
                 throw new Error('No data received from server');
             }
 
-            console.log('Fetched bookmarks:', response.data); // Debug log
             setBookmarkedTools(response.data);
         } catch (error) {
             console.error('Detailed error:', error); // Detailed error logging

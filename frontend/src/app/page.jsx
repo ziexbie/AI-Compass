@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { IconArrowRight } from '@tabler/icons-react'
 
 // AI tool comparison data
 const aiTools = [
@@ -132,18 +133,18 @@ export default function Home() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link
-                  href="/compare"
-                  className="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3.5 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all"
+                  href="/browse-tools"
+                  className="flex items-center rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3.5 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all"
                 >
-                  Start comparing
+                  Explore Tools <span className="inline-block transition-transform group-hover:translate-x-1 ml-1"><IconArrowRight/></span>
                 </Link>
               </motion.div>
-              <Link
+              {/* <Link
                 href="/explore"
                 className="text-sm font-semibold leading-6 text-gray-900 dark:text-white group"
               >
                 Explore tools <span className="inline-block transition-transform group-hover:translate-x-1 ml-1">→</span>
-              </Link>
+              </Link> */}
             </div>
           </motion.div>
         </div>
