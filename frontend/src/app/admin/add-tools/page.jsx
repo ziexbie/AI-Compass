@@ -71,16 +71,10 @@ const AddTools = () => {
       website: Yup.string().url('Must be a valid URL').required('Website URL is required'),
       features: Yup.array().of(Yup.string()),
       pricing: Yup.object({
-        startingPrice: Yup.string().test('is-number', 'Must be a valid number', value => 
-          value === '' || !isNaN(value)
-        ),
+        startingPrice: Yup.string(), // Changed to accept any string
         subscription: Yup.object({
-          monthly: Yup.string().test('is-number', 'Must be a valid number', value => 
-            value === '' || !isNaN(value)
-          ),
-          yearly: Yup.string().test('is-number', 'Must be a valid number', value => 
-            value === '' || !isNaN(value)
-          )
+          monthly: Yup.string(), // Changed to accept any string
+          yearly: Yup.string()   // Changed to accept any string
         })
       }),
       api: Yup.object({
@@ -124,14 +118,7 @@ const AddTools = () => {
           rating: 0, // Add default rating
           createdAt: new Date(), // Add creation date
           // Convert pricing numbers from string to number
-          pricing: {
-            ...values.pricing,
-            startingPrice: Number(values.pricing.startingPrice) || 0,
-            subscription: {
-              monthly: Number(values.pricing.subscription.monthly) || 0,
-              yearly: Number(values.pricing.subscription.yearly) || 0
-            }
-          }
+          
         };
 
         // Add this right before the axios.post call
@@ -361,38 +348,35 @@ const AddTools = () => {
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-white text-sm mb-2">Starting Price ($)</label>
+                  <label className="block text-white text-sm mb-2">Starting Price</label>
                   <input
-                    type="number"
+                    type="text" // Changed from number to text
                     name="pricing.startingPrice"
                     value={toolForm.values.pricing.startingPrice}
                     onChange={toolForm.handleChange}
-                    min="0"
-                    step="0.01"
+                    placeholder="e.g., $10 or Contact for pricing"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-pink-300 focus:ring-1 focus:ring-pink-300"
                   />
                 </div>
                 <div>
-                  <label className="block text-white text-sm mb-2">Monthly Subscription ($)</label>
+                  <label className="block text-white text-sm mb-2">Monthly Subscription</label>
                   <input
-                    type="number"
+                    type="text" // Changed from number to text
                     name="pricing.subscription.monthly"
                     value={toolForm.values.pricing.subscription.monthly}
                     onChange={toolForm.handleChange}
-                    min="0"
-                    step="0.01"
+                    placeholder="e.g., $29.99/month or Custom pricing"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-pink-300 focus:ring-1 focus:ring-pink-300"
                   />
                 </div>
                 <div>
-                  <label className="block text-white text-sm mb-2">Yearly Subscription ($)</label>
+                  <label className="block text-white text-sm mb-2">Yearly Subscription</label>
                   <input
-                    type="number"
+                    type="text" // Changed from number to text
                     name="pricing.subscription.yearly"
                     value={toolForm.values.pricing.subscription.yearly}
                     onChange={toolForm.handleChange}
-                    min="0"
-                    step="0.01"
+                    placeholder="e.g., $299/year or Enterprise pricing"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-pink-300 focus:ring-1 focus:ring-pink-300"
                   />
                 </div>

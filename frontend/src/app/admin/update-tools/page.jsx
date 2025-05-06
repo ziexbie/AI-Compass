@@ -58,10 +58,10 @@ const UpdateTool = () => {
       website: Yup.string().url('Must be a valid URL').required('Website URL is required'),
       features: Yup.array().of(Yup.string()),
       pricing: Yup.object({
-        startingPrice: Yup.number().min(0, 'Price cannot be negative'),
+        startingPrice: Yup.string(),
         subscription: Yup.object({
-          monthly: Yup.number().min(0, 'Price cannot be negative'),
-          yearly: Yup.number().min(0, 'Price cannot be negative')
+          monthly: Yup.string(),
+          yearly: Yup.string()
         })
       }),
       api: Yup.object({

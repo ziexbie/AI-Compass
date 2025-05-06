@@ -1,13 +1,15 @@
 import React from 'react'
-import Navbar from './Navbar';
+import Navbar from './components/Navbar';
 
-const Layout = ({ children }) => {
+const AdminLayout = ({ children }) => {
     return (
-        <div>
+        <div className="min-h-screen bg-[#0A0118] flex">
             <Navbar />
-            {children}
+            <main className="flex-1 ml-64 p-8 min-h-screen overflow-auto">
+                {children}
+            </main>
         </div>
-    )
-}
+    );
+};
 
-export default Layout;
+export default AdminLayout;

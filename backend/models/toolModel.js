@@ -9,11 +9,11 @@ const toolSchema = new Schema({
     features: [String],
     pricing: {
         free: Boolean,
-        startingPrice: Number,
+        startingPrice: String,
         trial: Boolean,
         subscription: {
-            monthly: Number,
-            yearly: Number
+            monthly: String,
+            yearly: String
         }
     },
     platform: {

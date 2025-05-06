@@ -69,4 +69,13 @@ router.put('/update/:id', async (req, res) => {
   }
 });
 
+router.get('/count', async (req, res) => {
+  try {
+    const count = await Model.countDocuments();
+    res.json({ count });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get tool count' });
+  }
+});
+
 module.exports = router;
