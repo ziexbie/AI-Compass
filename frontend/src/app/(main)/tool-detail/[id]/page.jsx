@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { IconBrandGithub, IconGlobe, IconShare, IconChartBar, IconApi, IconDeviceLaptop } from '@tabler/icons-react';
+import { IconBrandGithub, IconGlobe, IconShare, IconChartBar, IconApi, IconDeviceLaptop, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import StarRating from '@/components/StarRating';
 
 const ViewTool = () => {
@@ -15,6 +15,7 @@ const ViewTool = () => {
     const [feedback, setFeedback] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [ratings, setRatings] = useState([]);
+    const [isBookmarked, setIsBookmarked] = useState(false);
 
     const fetchToolDetails = async () => {
         try {
@@ -35,6 +36,42 @@ const ViewTool = () => {
         } catch (error) {
             console.error('Error fetching ratings:', error);
             toast.error('Failed to fetch ratings');
+        }
+    };
+
+    const checkBookmarkStatus = async () => {
+        try {
+            const userId = '12345'; // Replace with actual user ID from auth
+            const response = await axios.get(`http://localhost:5000/bookmark/check/${userId}/${id}`);
+            setIsBookmarked(response.data.isBookmarked);
+        } catch (error) {
+            console.error('Error checking bookmark status:', error);
+            toast.error('Failed to check bookmark status');
+        }
+    };
+
+    const handleBookmarkToggle = async () => {
+        try {
+            const userId = '12345'; // Replace with actual user ID from auth
+
+            if (isBookmarked) {
+                // Remove bookmark
+                await axios.delete(`http://localhost:5000/bookmark/remove/${userId}/${id}`);
+                setIsBookmarked(false);
+                toast.success('Removed from bookmarks');
+            } else {
+                // Add bookmark
+                const response = await axios.post('http://localhost:5000/bookmark/add', {
+                    userId,
+                    toolId: id
+                });
+                
+                setIsBookmarked(true);
+                toast.success(response.data.message || 'Added to bookmarks');
+            }
+        } catch (error) {
+            console.error('Bookmark error:', error);
+            toast.error(error.response?.data?.error || 'Failed to update bookmark');
         }
     };
 
@@ -72,6 +109,7 @@ const ViewTool = () => {
     useEffect(() => {
         fetchToolDetails();
         fetchToolRatings();
+        checkBookmarkStatus();
     }, [id]);
 
     const handleCompare = () => {
@@ -144,6 +182,23 @@ const ViewTool = () => {
 
                             {/* Action Buttons */}
                             <div className="flex flex-col gap-3">
+                                <button
+                                    onClick={handleBookmarkToggle}
+                                    className="px-4 py-2 border border-pink-300/20 rounded-lg text-pink-300 
+                                    hover:bg-pink-500/10 transition-all flex items-center justify-center gap-2"
+                                >
+                                    {isBookmarked ? (
+                                        <>
+                                            <IconBookmarkFilled size={20} />
+                                            Bookmarked
+                                        </>
+                                    ) : (
+                                        <>
+                                            <IconBookmark size={20} />
+                                            Bookmark
+                                        </>
+                                    )}
+                                </button>
                                 <button
                                     onClick={handleCompare}
                                     className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 

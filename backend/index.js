@@ -3,6 +3,8 @@ const path = require('path');
 const UserRouter = require('./routers/userRouter');
 const RatingRouter = require('./routers/ratingRouter');
 const ToolRouter = require('./routers/toolRouter');
+const bookmarkRoutes = require('./routers/bookMarkRouter');
+
 const cors = require('cors');
 
 //creating new expess app
@@ -17,6 +19,7 @@ app.use(express.json());
 app.use('/user', UserRouter);
 app.use('/rating', RatingRouter);
 app.use('/tool', ToolRouter);
+app.use('/bookmark', bookmarkRoutes);
 
 // Serve static files from uploads directory
 
