@@ -42,26 +42,31 @@ const Navbar = () => {
   };
 
   const navLinks = [
+    { href: '/browse-tools', label: 'Browse' },
+    { href: '/user/compare-tools', label: 'Compare' },
+    { href: '/user/bookmarked-tools', label: 'Bookmarks' },
     { href: '/user/profile', label: 'Profile' },
-    { href: '/user/bookmarked-tools', label: 'Bookmarked Tools' },
-    { href: '/user/compare-tools', label: 'Compare Tools' },
   ];
 
   const isActive = (path) => pathname === path;
 
   return (
-    <nav className="bg-white shadow-lg">
+    <nav className="bg-[#121212] border-b border-gray-800 sticky top-0 z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-gray-800">AI Compass</span>
+            <Link href="/" className="text-2xl font-bold" style={{
+              background: 'linear-gradient(90deg, #00FFFF 0%, #FF00FF 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
+AI Compass
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden sm:flex sm:items-center">
-            <div className="flex space-x-4">
+            <div className="flex items-center space-x-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
