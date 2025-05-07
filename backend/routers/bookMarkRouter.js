@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Bookmark = require('../models/bookmarkModel');
+const Bookmark = require('../models/bookmark');
 const Tool = require('../models/toolModel');
 
 // Add bookmark
