@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
         <Toaster position="top-right" />
         <SmoothScroll>
           {children}
-          <Footer />
+          {/* <Footer /> */}
         </SmoothScroll>
       </body>
     </html>
