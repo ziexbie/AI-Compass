@@ -37,7 +37,7 @@ const Navbar = () => {
                                 href="/login"
                                 className="px-4 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all hover:shadow-md"
                             >
-                                Sign In
+                                Login
                             </Link>
                         </div>
                     </div>
