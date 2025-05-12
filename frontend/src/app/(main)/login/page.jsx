@@ -39,7 +39,7 @@ const Login = () => {
                         if (userRole === 'admin') {
                             router.push('/admin');
                         } else {
-                            router.push('/user/profile');
+                            router.push('/');
                         }
                     } else {
                         toast.error('Login failed - no token received');

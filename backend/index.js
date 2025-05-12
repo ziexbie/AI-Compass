@@ -41,11 +41,11 @@ app.use((err, req, res, next) => {
 //routes or endpoints
 
 app.get('/', (req, res) => {
-       res.send('res')
+       res.send('Hihihihih')
 })
 
 app.get('/add', (req, res) => {
-       res.send('res from add')
+       res.send('hihhi from add')
 })
 
 app.get('/getall', (req, res) => {
