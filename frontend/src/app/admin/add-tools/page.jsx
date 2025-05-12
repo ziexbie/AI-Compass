@@ -71,10 +71,10 @@ const AddTools = () => {
       website: Yup.string().url('Must be a valid URL').required('Website URL is required'),
       features: Yup.array().of(Yup.string()),
       pricing: Yup.object({
-        startingPrice: Yup.string(), // Changed to accept any string
+        startingPrice: Yup.string(), 
         subscription: Yup.object({
-          monthly: Yup.string(), // Changed to accept any string
-          yearly: Yup.string()   // Changed to accept any string
+          monthly: Yup.string(), 
+          yearly: Yup.string()  
         })
       }),
       api: Yup.object({
@@ -115,9 +115,9 @@ const AddTools = () => {
         const toolData = {
           ...values,
           logo: logoUrl,
-          rating: 0, // Add default rating
-          createdAt: new Date(), // Add creation date
-          // Convert pricing numbers from string to number
+          rating: 0, 
+          createdAt: new Date(), 
+          
           
         };
 
