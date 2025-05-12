@@ -1,10 +1,31 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { jwtDecode } from 'jwt-decode'
+
 
 const Navbar = () => {
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [userRole, setUserRole] = useState(null)
+
+    useEffect(() => {
+        // Check if user is logged in
+        const token = localStorage.getItem('token')
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token)
+                setIsLoggedIn(true)
+                setUserRole(decodedToken.role)
+            } catch (error) {
+                console.error('Invalid token:', error)
+                localStorage.removeItem('token')
+            }
+        }
+    }, [])
+
     return (
         <div className="sticky top-0 z-50 ">
             <nav className="backdrop-blur-md border-b bg-gray-900 border-gray-800">
@@ -33,12 +54,21 @@ const Navbar = () => {
                             >
                                 Compare
                             </Link>
-                            <Link
-                                href="/login"
-                                className="px-4 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all hover:shadow-md"
-                            >
-                                Sign In
-                            </Link>
+                            {isLoggedIn ? (
+                                <Link
+                                    href={userRole === 'admin' ? '/admin/profile' : '/user/profile'}
+                                    className="px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-sm transition-all hover:shadow-md"
+                                >
+                                    Profile
+                                </Link>
+                            ) : (
+                                <Link
+                                    href="/login"
+                                    className="px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-sm transition-all hover:shadow-md"
+                                >
+                                    Sign In
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>

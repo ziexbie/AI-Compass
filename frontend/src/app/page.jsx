@@ -74,7 +74,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800">
-    
+
       {/* Navigation */}
       <nav className="backdrop-blur-md bg-white/80 dark:bg-gray-900/80 sticky top-0 z-10 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -121,6 +121,7 @@ export default function Home() {
           </div>
         </div>
       </nav>
+      {/* <Navbar /> */}
 
       {/* Hero section */}
       <section className="relative px-6 pt-20 pb-16 lg:px-8 overflow-hidden">
@@ -163,7 +164,7 @@ export default function Home() {
                   href="/browse-tools"
                   className="flex items-center rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3.5 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all"
                 >
-                  Explore Tools <span className="inline-block transition-transform group-hover:translate-x-1 ml-1"><IconArrowRight/></span>
+                  Explore Tools <span className="inline-block transition-transform group-hover:translate-x-1 ml-1"><IconArrowRight /></span>
                 </Link>
               </motion.div>
               {/* <Link
@@ -389,7 +390,7 @@ export default function Home() {
           </div>
         </motion.div>
       </section>
-      
+
     </div>
   )
 }

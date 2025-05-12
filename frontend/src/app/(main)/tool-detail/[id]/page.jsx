@@ -17,12 +17,28 @@ const ViewTool = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [ratings, setRatings] = useState([]);
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [userId, setUserId] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-
-
-    const token = localStorage.getItem('user');
-    const decodedToken = jwtDecode(token); // Fixed function name
-    // console.log('Decoded token:', decodedToken); // Debug log
+    // Safe token handling
+    useEffect(() => {
+        try {
+            // Check for token in localStorage with consistent key name ('token')
+            const token = localStorage.getItem('token');
+            if (token && typeof token === 'string') {
+                try {
+                    const decodedToken = jwtDecode(token);
+                    setUserId(decodedToken._id);
+                    setIsLoggedIn(true);
+                } catch (error) {
+                    console.error('Token decode error:', error);
+                    localStorage.removeItem('token'); // Clear invalid token
+                }
+            }
+        } catch (error) {
+            console.error('Error accessing localStorage:', error);
+        }
+    }, []);
 
     const fetchToolDetails = async () => {
         try {
@@ -46,22 +62,26 @@ const ViewTool = () => {
         }
     };
 
-    const checkBookmarkStatus =  async () => {
+    const checkBookmarkStatus = async () => {
+        if (!userId) return;
+        
         try {
-            const userId = decodedToken._id; // Replace with actual user ID from auth
             const response = await axios.get(`http://localhost:5000/bookmark/check/${userId}/${id}`);
             setIsBookmarked(response.data.isBookmarked);
         } catch (error) {
             console.error('Error checking bookmark status:', error);
-            toast.error('Failed to check bookmark status');
+            // Silently fail bookmark check to not disrupt the user experience
         }
     };
 
     const handleBookmarkToggle = async () => {
+        if (!isLoggedIn) {
+            toast.error('Please login first to bookmark tools');
+            router.push('/login');
+            return;
+        }
+        
         try {
-            const userId = decodedToken._id; // Replace with actual user ID from auth
-            // console.log('User ID:', userId); // Debug log
-
             if (isBookmarked) {
                 // Remove bookmark
                 await axios.delete(`http://localhost:5000/bookmark/remove/${userId}/${id}`);
@@ -72,10 +92,8 @@ const ViewTool = () => {
                 const response = await axios.post('http://localhost:5000/bookmark/add', {
                     userId,
                     toolId: id
-                    
                 });
                 setIsBookmarked(true);
-                console.log('Bookmark response:', response.data); // Debug log
                 toast.success(response.data.message || 'Added to bookmarks');
             }
         } catch (error) {
@@ -86,6 +104,13 @@ const ViewTool = () => {
 
     const handleRatingSubmit = async (e) => {
         e.preventDefault();
+        
+        if (!isLoggedIn) {
+            toast.error('Please login first to submit a rating');
+            router.push('/login');
+            return;
+        }
+        
         if (!userRating) {
             toast.error('Please select a rating');
             return;
@@ -97,7 +122,7 @@ const ViewTool = () => {
                 toolId: id,
                 rating: userRating,
                 comment: feedback.trim() || undefined, // Only send if there's content
-                userId: decodedToken._id // Will need to be replaced with actual user ID
+                userId: userId
             });
 
             if (response.data) {
@@ -118,8 +143,12 @@ const ViewTool = () => {
     useEffect(() => {
         fetchToolDetails();
         fetchToolRatings();
-        checkBookmarkStatus();
-    }, [id]);
+        
+        // Only check bookmark status if we have a userId
+        if (userId) {
+            checkBookmarkStatus();
+        }
+    }, [id, userId]);
 
     const handleCompare = () => {
         router.push(`/compare-tools?tool1=${id}`);
@@ -276,35 +305,6 @@ const ViewTool = () => {
                                 </div>
                             )}
                             {tool.pricing?.trial && (
-                                <div className="flex items-center gap-2 text-green-300">
-                                    <span>✓</span>
-                                    <span>Trial Available</span>
-                                </div>
-                            )}
-                            {tool.pricing?.startingPrice > 0 && (
-                                <div className="text-gray-300">
-                                    Starting from: <span className="text-pink-300">${tool.pricing.startingPrice}</span>
-                                </div>
-                            )}
-                            {tool.pricing?.subscription?.monthly > 0 && (
-                                <div className="text-gray-300">
-                                    Monthly: <span className="text-pink-300">${tool.pricing.subscription.monthly}</span>
-                                </div>
-                            )}
-                            {tool.pricing?.subscription?.yearly > 0 && (
-                                <div className="text-gray-300">
-                                    Yearly: <span className="text-pink-300">${tool.pricing.subscription.yearly}</span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Platform Card */}
-                    <div className="bg-[#1A1625] rounded-xl p-6 border border-[#2A2438] shadow-lg hover:border-pink-500/20 transition-all duration-300">
-                        <h2 className="text-xl font-semibold text-pink-500 mb-4">Platforms</h2>
-                        <div className="grid grid-cols-2 gap-3">
-                            {Object.entries(tool.platform || {}).map(([key, value]) => 
-                                value && (
                                     <div key={key} className="flex items-center gap-2 text-gray-300">
                                         <IconDeviceLaptop className="text-pink-300" size={18} />
                                         <span className="capitalize">{key}</span>
