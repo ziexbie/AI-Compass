@@ -310,7 +310,7 @@ const ViewTool = () => {
                                         <span className="capitalize">{key}</span>
                                     </div>
                                 )
-                            )}
+                            }
                         </div>
                     </div>
                 </div>
