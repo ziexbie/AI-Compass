@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { IconTool, IconUsers, IconStar, IconCategory } from '@tabler/icons-react';
+import { IconTool, IconUsers, IconStar } from '@tabler/icons-react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
@@ -8,25 +8,22 @@ const AdminDashboard = () => {
     const [stats, setStats] = useState({
         tools: 0,
         users: 0,
-        reviews: 0,
-        categories: 0
+        reviews: 0
     });
     const [loading, setLoading] = useState(true);
 
     const fetchStats = async () => {
         try {
-            const [toolsRes, usersRes, reviewsRes, categoriesRes] = await Promise.all([
+            const [toolsRes, usersRes, reviewsRes] = await Promise.all([
                 axios.get('http://localhost:5000/tool/count'),
                 axios.get('http://localhost:5000/user/count'),
-                axios.get('http://localhost:5000/rating/count'),
-                axios.get('http://localhost:5000/category/count')
+                axios.get('http://localhost:5000/rating/count')
             ]);
 
             setStats({
                 tools: toolsRes.data.count,
                 users: usersRes.data.count,
-                reviews: reviewsRes.data.count,
-                categories: categoriesRes.data.count
+                reviews: reviewsRes.data.count
             });
         } catch (error) {
             console.error('Error fetching stats:', error);
@@ -43,18 +40,17 @@ const AdminDashboard = () => {
     const statCards = [
         { title: 'Total Tools', value: stats.tools, icon: IconTool },
         { title: 'Active Users', value: stats.users, icon: IconUsers },
-        { title: 'Reviews', value: stats.reviews, icon: IconStar },
-        { title: 'Categories', value: stats.categories, icon: IconCategory },
+        { title: 'Reviews', value: stats.reviews, icon: IconStar }
     ];
 
     return (
         <div>
             <h1 className="text-3xl font-bold text-white mb-8">Dashboard Overview</h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {loading ? (
                     // Loading skeleton
-                    [...Array(4)].map((_, index) => (
+                    [...Array(3)].map((_, index) => (
                         <div key={index} className="bg-[#1A1625] rounded-xl p-6 border border-[#2A2438] animate-pulse">
                             <div className="h-12 bg-gray-700 rounded mb-2"></div>
                             <div className="h-8 bg-gray-700 rounded w-24"></div>

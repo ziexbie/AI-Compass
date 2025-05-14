@@ -137,10 +137,12 @@ const UpdateTools = () => {
         })
       }),
       api: Yup.object({
-        documentation: Yup.string().when('available', {
-          is: true,
-          then: Yup.string().url('Must be a valid URL').required('Documentation URL is required')
-        })
+        available: Yup.boolean(),
+        documentation: Yup.string().when('available', (available, schema) =>
+          available
+            ? schema.url('Must be a valid URL').required('Documentation URL is required')
+            : schema.notRequired()
+        )
       })
     }),
     onSubmit: async (values) => {
