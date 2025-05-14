@@ -44,13 +44,13 @@ const BrowseTools = () => {
 
   const filteredTools = tools.filter(tool => {
     const matchesSearch = tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         tool.description.toLowerCase().includes(searchTerm.toLowerCase());
+      tool.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || tool.category === selectedCategory;
     const matchesPrice = (!filters.free && !filters.paid && !filters.trial) ||
-                        (filters.free && tool.pricing?.free) ||
-                        (filters.paid && tool.pricing?.paid) ||
-                        (filters.trial && tool.pricing?.trial);
-    
+      (filters.free && tool.pricing?.free) ||
+      (filters.paid && tool.pricing?.paid) ||
+      (filters.trial && tool.pricing?.trial);
+
     return matchesSearch && matchesCategory && matchesPrice;
   });
 
@@ -166,8 +166,8 @@ const BrowseTools = () => {
                     <span className="px-3 py-1 bg-gray-700 rounded-full text-sm text-gray-300">
                       {tool.category}
                     </span>
-                    <Link 
-                      href={`/tool-detail/${tool._id}`} 
+                    <Link
+                      href={`/tool-detail/${tool._id}`}
                       className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all"
                     >
                       View Details
