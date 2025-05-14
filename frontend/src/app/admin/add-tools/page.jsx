@@ -67,22 +67,31 @@ const AddTools = () => {
       name: Yup.string().required('Tool name is required'),
       description: Yup.string().required('Description is required'),
       category: Yup.string().required('Category is required'),
-      
       website: Yup.string().url('Must be a valid URL').required('Website URL is required'),
       features: Yup.array().of(Yup.string()),
       pricing: Yup.object({
-        startingPrice: Yup.string(), 
+        startingPrice: Yup.string(),
         subscription: Yup.object({
-          monthly: Yup.string(), 
-          yearly: Yup.string()  
+          monthly: Yup.string(),
+          yearly: Yup.string()
         })
       }),
       api: Yup.object({
-        documentation: Yup.string().when('available', {
-          is: true,
-          then: Yup.string().url('Must be a valid URL').required('Documentation URL is required')
-        })
-      })
+        available: Yup.boolean(),
+        documentation: Yup.string()
+      }).test(
+        'api-doc-required',
+        'Documentation URL is required and must be valid when API is available',
+        function (value) {
+          if (value && value.available) {
+            return (
+              !!value.documentation &&
+              Yup.string().url('Must be a valid URL').isValidSync(value.documentation)
+            );
+          }
+          return true;
+        }
+      )
     }),
     onSubmit: async (values) => {
       try {
