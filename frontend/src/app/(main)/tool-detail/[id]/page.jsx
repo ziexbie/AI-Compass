@@ -151,7 +151,11 @@ const ViewTool = () => {
     }, [id, userId]);
 
     const handleCompare = () => {
-        router.push(`/compare-tools?tool1=${id}`);
+        if (!tool) {
+            toast.error('Tool information not available');
+            return;
+        }
+        router.push(`/user/compare-tools`);
     };
 
     if (loading) {
@@ -179,12 +183,12 @@ const ViewTool = () => {
                         {/* Tool Header */}
                         <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
                             {/* Logo */}
-                            <div className="w-32 h-32 flex-shrink-0">
+                            <div className="w-32 h-32 flex-shrink-0 ">
                                 {tool.logo ? (
                                     <img
                                         src={tool.logo}
                                         alt={tool.name}
-                                        className="w-full h-full object-cover rounded-xl bg-[#2A2438] p-2"
+                                        className="w-full h-full object-contain rounded-xl bg-[#2A2438] p-2"
                                     />
                                 ) : (
                                     <div className="w-full h-full rounded-xl bg-[#2A2438] flex items-center justify-center">
@@ -305,12 +309,23 @@ const ViewTool = () => {
                                 </div>
                             )}
                             {tool.pricing?.trial && (
-                                    <div key={key} className="flex items-center gap-2 text-gray-300">
-                                        <IconDeviceLaptop className="text-pink-300" size={18} />
-                                        <span className="capitalize">{key}</span>
-                                    </div>
-                                )
-                            }
+                                <div className="flex items-center gap-2 text-blue-300">
+                                    <span>✓</span>
+                                    <span>Trial Available</span>
+                                </div>
+                            )}
+                            {tool.pricing?.paid && (
+                                <div className="flex items-center gap-2 text-purple-300">
+                                    <span>✓</span>
+                                    <span>Paid Plans Available</span>
+                                </div>
+                            )}
+                            {Object.entries(tool.integrations || {}).map(([key]) => (
+                                <div key={key} className="flex items-center gap-2 text-gray-300">
+                                    <IconDeviceLaptop className="text-pink-300" size={18} />
+                                    <span className="capitalize">{key}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

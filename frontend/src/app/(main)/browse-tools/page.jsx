@@ -25,7 +25,10 @@ const BrowseTools = () => {
     { id: 'code', name: 'Code & Development' },
     { id: 'audio', name: 'Audio & Speech' },
     { id: 'research', name: 'Research & Analysis' }
-  ];
+  ].map(category => ({
+    ...category,
+    id: category.id.toLowerCase()
+  }));
 
   useEffect(() => {
     fetchTools();
@@ -45,7 +48,11 @@ const BrowseTools = () => {
   const filteredTools = tools.filter(tool => {
     const matchesSearch = tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       tool.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || tool.category === selectedCategory;
+    // Add logging to debug category matching
+    console.log('Tool category:', tool.category);
+    console.log('Selected category:', selectedCategory);
+    const matchesCategory = selectedCategory === 'all' || 
+        tool.category.toLowerCase() === selectedCategory.toLowerCase();
     const matchesPrice = (!filters.free && !filters.paid && !filters.trial) ||
       (filters.free && tool.pricing?.free) ||
       (filters.paid && tool.pricing?.paid) ||
@@ -53,6 +60,12 @@ const BrowseTools = () => {
 
     return matchesSearch && matchesCategory && matchesPrice;
   });
+
+  // Add logging when category is selected
+  const handleCategorySelect = (categoryId) => {
+    console.log('Selecting category:', categoryId);
+    setSelectedCategory(categoryId.toLowerCase());
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
@@ -90,7 +103,7 @@ const BrowseTools = () => {
             {categories.map((category) => (
               <button
                 key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
+                onClick={() => handleCategorySelect(category.id)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all
                   ${selectedCategory === category.id
                     ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white'

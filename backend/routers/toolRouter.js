@@ -78,4 +78,50 @@ router.get('/count', async (req, res) => {
   }
 });
 
+
+
+// Add these new route handlers
+router.get('/trending', async (req, res) => {
+    try {
+        // Get top 5 tools sorted by average rating
+        const trendingTools = await Tool.aggregate([
+            {
+                $lookup: {
+                    from: 'ratings',
+                    localField: '_id',
+                    foreignField: 'toolId',
+                    as: 'ratings'
+                }
+            },
+            {
+                $addFields: {
+                    avgRating: { $avg: '$ratings.rating' },
+                    totalRatings: { $size: '$ratings' }
+                }
+            },
+            {
+                $sort: { avgRating: -1 }
+            },
+            {
+                $limit: 5
+            }
+        ]);
+
+        res.json(trendingTools);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch trending tools' });
+    }
+});
+
+router.get('/featured', async (req, res) => {
+    try {
+        const featuredTools = await Tool.find({ featured: true });
+        res.json(featuredTools);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch featured tools' });
+    }
+});
+
+
+
 module.exports = router;

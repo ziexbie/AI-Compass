@@ -20,7 +20,7 @@ const Navbar = () => {
     { name: 'Dashboard', path: '/admin', icon: IconDashboard },
     { name: 'Manage Tools', path: '/admin/manage-tools', icon: IconTools },
     { name: 'Add Tool', path: '/admin/add-tools', icon: IconPlus },
-    { name: 'Update Tools', path: '/admin/update-tools', icon: IconEdit },
+    { name: 'Browse Tools', path: '/browse-tools', icon: IconCategory },
     { name: 'Manage Users', path: '/admin/manage-user', icon: IconUsers },
     { name: 'Update Users', path: '/admin/update-user', icon: IconEdit },
 
