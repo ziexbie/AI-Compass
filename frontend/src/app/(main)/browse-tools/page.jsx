@@ -19,12 +19,12 @@ const BrowseTools = () => {
 
   const categories = [
     { id: 'all', name: 'All Tools' },
-    { id: 'writing', name: 'Writing & Content' },
-    { id: 'image', name: 'Image Generation' },
-    { id: 'video', name: 'Video Creation' },
-    { id: 'code', name: 'Code & Development' },
-    { id: 'audio', name: 'Audio & Speech' },
-    { id: 'research', name: 'Research & Analysis' }
+    { id: 'Writing & Content', name: 'Writing & Content' },
+    { id: 'Image Generation', name: 'Image Generation' },
+    { id: 'Video Creation', name: 'Video Creation' },
+    { id: 'Code & Development', name: 'Code & Development' },
+    { id: 'Audio & Speech', name: 'Audio & Speech' },
+    { id: 'Research & Analysis', name: 'Research & Analysis' }
   ].map(category => ({
     ...category,
     id: category.id.toLowerCase()
