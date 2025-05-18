@@ -83,13 +83,12 @@ router.get('/count', async (req, res) => {
 // Add these new route handlers
 router.get('/trending', async (req, res) => {
     try {
-        // Get top 5 tools sorted by average rating
-        const trendingTools = await Tool.aggregate([
+        const trendingTools = await Model.aggregate([
             {
                 $lookup: {
                     from: 'ratings',
                     localField: '_id',
-                    foreignField: 'toolId',
+                    foreignField: 'tool', // Changed from 'toolId' to 'tool'
                     as: 'ratings'
                 }
             },
@@ -109,13 +108,14 @@ router.get('/trending', async (req, res) => {
 
         res.json(trendingTools);
     } catch (error) {
+        console.error('Error fetching trending tools:', error);
         res.status(500).json({ error: 'Failed to fetch trending tools' });
     }
 });
 
 router.get('/featured', async (req, res) => {
     try {
-        const featuredTools = await Tool.find({ featured: true });
+        const featuredTools = await Model.find({ featured: true });
         res.json(featuredTools);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch featured tools' });

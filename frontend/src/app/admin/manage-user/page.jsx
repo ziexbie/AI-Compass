@@ -4,11 +4,53 @@ import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
 
 const ManageUsers = () => {
 
     const [loading, setLoading] = useState(false);
     const [userList, setUserList] = useState([]);
+    const [admin, setAdmin] = useState(null);
+
+    const router = useRouter(); 
+
+     useEffect(() => {
+        const fetchAdminData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    toast.error('Authentication required');
+                    router.push('/login');
+                    return;
+                }
+
+                // Decode token to get admin ID
+                const decodedToken = jwtDecode(token);
+                const adminId = decodedToken._id;
+
+                // Check if user has admin role
+                if (decodedToken.role !== 'admin') {
+                    toast.error('Unauthorized: Admin access only');
+                    router.push('/login');
+                    return;
+                }
+
+                // Fetch admin user data
+                const adminResponse = await axios.get(`http://localhost:5000/user/getbyid/${adminId}`);
+                setAdmin(adminResponse.data);
+
+            } catch (error) {
+                console.error('Error fetching admin data:', error);
+                toast.error('Failed to load admin profile data');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAdminData();
+    }, [router]);
+
 
     const fetchUser = async () => {
         setLoading(true);

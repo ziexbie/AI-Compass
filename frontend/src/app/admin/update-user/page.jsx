@@ -5,12 +5,51 @@ import * as Yup from 'yup';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
 
 const UpdateUser = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const userId = searchParams.get('id');
+  const [admin, setAdmin] = useState(null);
+
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error('Authentication required');
+          router.push('/login');
+          return;
+        }
+
+        // Decode token to get admin ID
+        const decodedToken = jwtDecode(token);
+        const adminId = decodedToken._id;
+
+        // Check if user has admin role
+        if (decodedToken.role !== 'admin') {
+          toast.error('Unauthorized: Admin access only');
+          router.push('/login');
+          return;
+        }
+
+        // Fetch admin user data
+        const adminResponse = await axios.get(`http://localhost:5000/user/getbyid/${adminId}`);
+        setAdmin(adminResponse.data);
+
+      } catch (error) {
+        console.error('Error fetching admin data:', error);
+        toast.error('Failed to load admin profile data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdminData();
+  }, [router]);
+
 
   const userForm = useFormik({
     initialValues: {
@@ -69,7 +108,7 @@ const UpdateUser = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-pink-300 mb-10">Update User</h1>
-        
+
         <form onSubmit={userForm.handleSubmit} className="space-y-6 bg-gray-800 p-8 rounded-xl shadow-lg border border-pink-300/20">
           {/* Name Field */}
           <div>
