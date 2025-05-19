@@ -48,6 +48,10 @@ const toolSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    featured: {
+        type: Boolean,
+        default: false
     }
 });
 

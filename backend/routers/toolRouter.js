@@ -115,9 +115,12 @@ router.get('/trending', async (req, res) => {
 
 router.get('/featured', async (req, res) => {
     try {
+        console.log('Fetching featured tools...');
         const featuredTools = await Model.find({ featured: true });
+        console.log('Found featured tools:', featuredTools);
         res.json(featuredTools);
     } catch (error) {
+        console.error('Error fetching featured tools:', error);
         res.status(500).json({ error: 'Failed to fetch featured tools' });
     }
 });

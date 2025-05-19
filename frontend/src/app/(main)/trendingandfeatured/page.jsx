@@ -22,9 +22,17 @@ const TrendingAndFeatured = () => {
                 axios.get('http://localhost:5000/tool/featured')
             ]);
             
+            console.log('Featured tools response:', featuredRes.data);
+            
             setTrendingTools(trendingRes.data);
             setFeaturedTools(featuredRes.data);
+
+            // Add validation check
+            if (featuredRes.data.length === 0) {
+                console.log('No featured tools found');
+            }
         } catch (error) {
+            console.error('Error fetching tools:', error);
             toast.error('Failed to fetch tools');
         } finally {
             setLoading(false);
