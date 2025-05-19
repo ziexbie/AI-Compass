@@ -102,7 +102,8 @@ const AddTools = () => {
         speed: 1,
         accuracy: 1
       },
-      website: ''
+      website: '',
+      featured: false, // Add this line
     },
     validationSchema: Yup.object({
       name: Yup.string().required('Tool name is required'),
@@ -165,20 +166,18 @@ const AddTools = () => {
         const toolData = {
           ...values,
           logo: logoUrl,
-          rating: 0, 
-          createdAt: new Date(), 
-          
-          
+          rating: 0,
+          createdAt: new Date(),
+          featured: values.featured  // Make sure featured status is included
         };
 
-        // Add this right before the axios.post call
         console.log('Submitting tool data:', toolData);
 
         // Send the data to your backend
         const response = await axios.post('http://localhost:5000/tool/add', toolData);
         
         if (response.status === 200) {
-          toast.success('Tool added successfully');
+          toast.success(values.featured ? 'Tool added and featured successfully' : 'Tool added successfully');
           router.push('/admin/manage-tools');
         }
       } catch (error) {
@@ -254,6 +253,21 @@ const AddTools = () => {
                 />
                 {toolForm.errors.version && <p className="mt-1 text-red-400 text-sm">{toolForm.errors.version}</p>}
               </div> */}
+            </div>
+
+            {/* Featured Tools Checkbox */}
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                name="featured"
+                id="featured"
+                checked={toolForm.values.featured}
+                onChange={toolForm.handleChange}
+                className="rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-gray-700"
+              />
+              <label htmlFor="featured" className="text-white text-sm">
+                Add to Featured Tools
+              </label>
             </div>
           </div>
 
