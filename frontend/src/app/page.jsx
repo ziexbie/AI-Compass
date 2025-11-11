@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { IconArrowRight } from '@tabler/icons-react'
+import { IconArrowRight, IconSparkles, IconChartBar, IconUsers, IconRocket, IconShieldCheck, IconBrandOpenai, IconTrendingUp, IconStar, IconCheck, IconX, IconExternalLink } from '@tabler/icons-react'
 import { jwtDecode } from 'jwt-decode'
 
 // AI tool comparison data
@@ -96,31 +96,36 @@ export default function Home() {
 	}, [])
 
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-[#0A0118] to-[#1A1625]">
+		<div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
 			{/* Navigation */}
-			<nav className="backdrop-blur-md bg-[#1A1625]/80 sticky top-0 z-10 border-b border-[#2A2438]">
+			<nav className="backdrop-blur-md bg-gray-900/95 sticky top-0 z-50 border-b border-gray-800/50 shadow-lg">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between h-16">
 						<div className="flex items-center">
 							<motion.div
-								className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-600"
+								className="flex items-center gap-2"
 								initial={{ opacity: 0, x: -20 }}
 								animate={{ opacity: 1, x: 0 }}
 								transition={{ duration: 0.5 }}
 							>
-								AI Compass
+								<div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-lg">
+									<IconBrandOpenai className="w-6 h-6 text-white" />
+								</div>
+								<span className="text-2xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+									AI Compass
+								</span>
 							</motion.div>
 						</div>
-						<div className="flex items-center space-x-4">
+						<div className="flex items-center space-x-2">
 							<Link
 								href="/browse-tools"
-								className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-teal-400 transition-colors"
+								className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all"
 							>
 								Explore
 							</Link>
 							<Link
-								href="/compare-tools"
-								className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-teal-400 transition-colors"
+								href="/user/compare-tools"
+								className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all"
 							>
 								Compare
 							</Link>
@@ -128,17 +133,17 @@ export default function Home() {
 								<Link
 									href={
 										userRole === 'admin'
-											? '/admin/profile'
+											? '/admin/page'
 											: '/user/profile'
 									}
-									className="px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-teal-600 hover:from-blue-600 hover:to-teal-700 shadow-sm transition-all hover:shadow-md"
+									className="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 shadow-lg hover:shadow-pink-500/50 transition-all hover:scale-105"
 								>
-									Profile
+									Dashboard
 								</Link>
 							) : (
 								<Link
 									href="/login"
-									className="px-4 py-2 rounded-md text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-teal-600 hover:from-blue-600 hover:to-teal-700 shadow-sm transition-all hover:shadow-md"
+									className="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 shadow-lg hover:shadow-pink-500/50 transition-all hover:scale-105"
 								>
 									Sign In
 								</Link>
@@ -147,216 +152,210 @@ export default function Home() {
 					</div>
 				</div>
 			</nav>
-			{/* <Navbar /> */}
 
 			{/* Hero section */}
-			<section className="relative px-6 pt-20 pb-16 lg:px-8 overflow-hidden">
+			<section className="relative px-6 pt-24 pb-20 lg:px-8 overflow-hidden">
+				{/* Animated Background */}
 				<motion.div
 					className="absolute inset-0 -z-10 overflow-hidden"
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ duration: 1 }}
 				>
-					<svg
-						className="absolute left-[calc(50%-33rem)] top-9 -z-10 transform-gpu blur-3xl"
-						aria-hidden="true"
-						viewBox="0 0 1155 678"
-					>
-						<path
-							fill="url(#9b2541ea-d39d-499b-bd42-aeea3e93f5ff)"
-							fillOpacity=".3"
-							d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
-						/>
-						<defs>
-							<linearGradient
-								id="9b2541ea-d39d-499b-bd42-aeea3e93f5ff"
-								x1="1155.49"
-								x2="-78.208"
-								y1=".177"
-								y2="474.645"
-								gradientUnits="userSpaceOnUse"
-							>
-								<stop stopColor="#3B82F6" />
-								<stop offset={1} stopColor="#14B8A6" />
-							</linearGradient>
-						</defs>
-					</svg>
+					<div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-blue-500/10 blur-3xl" />
+					<div className="absolute top-1/4 left-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-pulse" />
+					<div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
 				</motion.div>
 
-				<div className="mx-auto max-w-6xl">
+				<div className="mx-auto max-w-7xl">
 					<motion.div
 						className="text-center"
 						initial="hidden"
 						animate="visible"
 						variants={fadeIn}
 					>
-						<h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl mb-6">
+						{/* Badge */}
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ delay: 0.2 }}
+							className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-full px-4 py-2 mb-8"
+						>
+							<IconSparkles className="w-5 h-5 text-pink-400" />
+							<span className="text-pink-300 text-sm font-semibold">Your AI Tool Discovery Platform</span>
+						</motion.div>
+
+						<h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl mb-6">
 							Navigate the AI{' '}
-							<span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-600">
+							<span className="bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
 								Landscape
 							</span>
 						</h1>
-						<p className="mt-6 text-lg leading-8 text-gray-300 dark:text-gray-300 max-w-2xl mx-auto">
-							Compare AI tools with precision and clarity. Find the perfect AI
-							solution for your specific needs with data-driven insights and expert
-							analysis.
+						<p className="mt-6 text-xl leading-8 text-gray-300 max-w-3xl mx-auto">
+							Discover, compare, and choose the perfect AI tools for your needs.
+							Make informed decisions with expert insights and real-time data.
 						</p>
-						<div className="mt-10 flex items-center justify-center gap-x-6">
+
+						<div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
 							<motion.div
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
 							>
 								<Link
 									href="/browse-tools"
-									className="flex items-center rounded-xl bg-gradient-to-r from-blue-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all"
+									className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 px-8 py-4 text-base font-semibold text-white shadow-lg hover:shadow-pink-500/50 transition-all"
 								>
-									Explore Tools{' '}
-									<span className="inline-block transition-transform group-hover:translate-x-1 ml-1">
-										<IconArrowRight />
-									</span>
+									<IconRocket className="w-5 h-5" />
+									Explore AI Tools
+									<IconArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+								</Link>
+							</motion.div>
+							<motion.div
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+							>
+								<Link
+									href="/user/compare-tools"
+									className="flex items-center gap-2 rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700 px-8 py-4 text-base font-semibold text-white hover:bg-gray-700/50 transition-all"
+								>
+									<IconChartBar className="w-5 h-5" />
+									Compare Tools
 								</Link>
 							</motion.div>
 						</div>
+
+						{/* Stats */}
+						{/* <motion.div
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ delay: 0.6 }}
+							className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto"
+						>
+							{[
+								{ icon: IconBrandOpenai, label: '500+ AI Tools', color: 'from-blue-500 to-cyan-500' },
+								{ icon: IconUsers, label: '10K+ Users', color: 'from-purple-500 to-pink-500' },
+								{ icon: IconStar, label: '4.9/5 Rating', color: 'from-yellow-500 to-orange-500' },
+							].map((stat, index) => (
+								<div key={index} className="flex flex-col items-center">
+									<div className={`p-3 bg-gradient-to-br ${stat.color} rounded-xl mb-2`}>
+										<stat.icon className="w-6 h-6 text-white" />
+									</div>
+									<span className="text-2xl font-bold text-white">{stat.label.split(' ')[0]}</span>
+									<span className="text-gray-400 text-sm">{stat.label.split(' ').slice(1).join(' ')}</span>
+								</div>
+							))}
+						</motion.div> */}
 					</motion.div>
 				</div>
 			</section>
 
 			{/* Featured comparison section */}
-			<section className="py-16 px-6 lg:px-8">
+			<section className="py-20 px-6 lg:px-8 bg-gray-900/50">
 				<motion.div
-					className="mx-auto max-w-6xl"
+					className="mx-auto max-w-7xl"
 					initial="hidden"
 					whileInView="visible"
 					viewport={{ once: true, margin: '-100px' }}
 					variants={staggerContainer}
 				>
 					<div className="text-center mb-16">
-						<motion.h2
-							className="text-base font-semibold text-blue-400 tracking-wide uppercase"
+						<motion.div
 							variants={fadeIn}
+							className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-full px-4 py-2 mb-4"
 						>
-							Featured Comparisons
-						</motion.h2>
+							<IconTrendingUp className="w-5 h-5 text-pink-400" />
+							<span className="text-pink-300 text-sm font-semibold">Featured Comparisons</span>
+						</motion.div>
 						<motion.p
-							className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl"
+							className="mt-2 text-4xl font-bold text-white"
 							variants={fadeIn}
 						>
 							Popular AI Tools Head-to-Head
 						</motion.p>
+						<motion.p
+							className="mt-4 text-gray-400 max-w-2xl mx-auto"
+							variants={fadeIn}
+						>
+							See how the most popular AI tools stack up against each other
+						</motion.p>
 					</div>
 
 					<motion.div
-						className="grid grid-cols-1 md:grid-cols-3 gap-8"
+						className="grid grid-cols-1 md:grid-cols-3 gap-6"
 						variants={staggerContainer}
 					>
 						{aiTools.map((tool, index) => (
 							<motion.div
 								key={tool.name}
-								className="relative overflow-hidden rounded-2xl bg-[#1A1625] border border-[#2A2438] shadow-md hover:shadow-xl transition-all duration-300"
+								className="relative overflow-hidden rounded-2xl bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 shadow-xl hover:shadow-2xl hover:shadow-pink-500/10 transition-all duration-300"
 								variants={fadeIn}
-								whileHover={{ y: -5 }}
+								whileHover={{ y: -8, scale: 1.02 }}
 								onHoverStart={() => setHoveredTool(index)}
 								onHoverEnd={() => setHoveredTool(null)}
 							>
-								<div className={`h-2 bg-gradient-to-r ${tool.color}`} />
+								<div className={`h-1.5 bg-gradient-to-r ${tool.color}`} />
 								<div className="p-6">
-									<div className="flex justify-between items-start">
+									<div className="flex justify-between items-start mb-4">
 										<div>
-											<h3 className="text-xl font-bold text-gray-900 dark:text-white">
+											<h3 className="text-2xl font-bold text-white mb-1">
 												{tool.name}
 											</h3>
-											<p className="text-sm text-indigo-600 dark:text-indigo-400">
+											<p className="text-sm font-medium text-purple-400">
 												{tool.category}
 											</p>
 										</div>
-										<span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-200">
-											{tool.rating}/5
-										</span>
+										<div className="flex items-center gap-1 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-full px-3 py-1">
+											<IconStar className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+											<span className="text-sm font-bold text-yellow-300">{tool.rating}</span>
+										</div>
 									</div>
-									<p className="mt-4 text-sm text-gray-300 dark:text-gray-300">
+									<p className="text-sm text-gray-300 leading-relaxed mb-6">
 										{tool.description}
 									</p>
 
-									<div className="mt-6">
-										<h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+									<div className="mb-6">
+										<h4 className="text-xs font-bold text-green-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+											<IconCheck className="w-4 h-4" />
 											Strengths
 										</h4>
-										<ul className="mt-2 space-y-1">
+										<ul className="space-y-2">
 											{tool.strengths.map((strength, i) => (
 												<li
 													key={i}
-													className="text-sm text-gray-300 dark:text-gray-300 flex items-center"
+													className="text-sm text-gray-300 flex items-start gap-2 bg-green-500/5 p-2 rounded-lg border border-green-500/10"
 												>
-													<svg
-														className="w-3.5 h-3.5 mr-2 text-green-500"
-														fill="none"
-														stroke="currentColor"
-														viewBox="0 0 24 24"
-														xmlns="http://www.w3.org/2000/svg"
-													>
-														<path
-															strokeLinecap="round"
-															strokeLinejoin="round"
-															strokeWidth="2"
-															d="M5 13l4 4L19 7"
-														></path>
-													</svg>
-													{strength}
+													<IconCheck className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+													<span>{strength}</span>
 												</li>
 											))}
 										</ul>
 									</div>
 
-									<div className="mt-4">
-										<h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+									<div className="mb-6">
+										<h4 className="text-xs font-bold text-red-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+											<IconX className="w-4 h-4" />
 											Weaknesses
 										</h4>
-										<ul className="mt-2 space-y-1">
+										<ul className="space-y-2">
 											{tool.weaknesses.map((weakness, i) => (
 												<li
 													key={i}
-													className="text-sm text-gray-300 dark:text-gray-300 flex items-center"
+													className="text-sm text-gray-300 flex items-start gap-2 bg-red-500/5 p-2 rounded-lg border border-red-500/10"
 												>
-													<svg
-														className="w-3.5 h-3.5 mr-2 text-red-500"
-														fill="none"
-														stroke="currentColor"
-														viewBox="0 0 24 24"
-														xmlns="http://www.w3.org/2000/svg"
-													>
-														<path
-															strokeLinecap="round"
-															strokeLinejoin="round"
-															strokeWidth="2"
-															d="M6 18L18 6M6 6l12 12"
-														></path>
-													</svg>
-													{weakness}
+													<IconX className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+													<span>{weakness}</span>
 												</li>
 											))}
 										</ul>
 									</div>
 
-									<div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+									<div className="pt-4 border-t border-gray-700/50">
 										<Link
-											href={`/tool/${tool.name.toLowerCase()}`}
-											className="inline-flex items-center text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
+											href={`/browse-tools`}
+											className="inline-flex items-center gap-2 text-sm font-semibold text-purple-400 hover:text-purple-300 transition-colors group"
 										>
-											Detailed analysis
-											<svg
-												className="ml-1 w-4 h-4"
-												fill="none"
-												stroke="currentColor"
-												viewBox="0 0 24 24"
-												xmlns="http://www.w3.org/2000/svg"
-											>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth="2"
-													d="M9 5l7 7-7 7"
-												></path>
-											</svg>
+											View Detailed Analysis
+											<IconExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
 										</Link>
 									</div>
 								</div>
@@ -367,164 +366,151 @@ export default function Home() {
 			</section>
 
 			{/* Features section */}
-			<section className="py-16 px-6 lg:px-8 bg-[#0A0118]">
+			<section className="py-20 px-6 lg:px-8">
 				<motion.div
-					className="mx-auto max-w-6xl"
+					className="mx-auto max-w-7xl"
 					initial="hidden"
 					whileInView="visible"
 					viewport={{ once: true, margin: '-100px' }}
 					variants={staggerContainer}
 				>
 					<div className="text-center mb-16">
-						<motion.h2
-							className="text-base font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase"
+						<motion.div
 							variants={fadeIn}
+							className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-full px-4 py-2 mb-4"
 						>
-							Why Choose AI Compass
-						</motion.h2>
+							<IconShieldCheck className="w-5 h-5 text-pink-400" />
+							<span className="text-pink-300 text-sm font-semibold">Why Choose Us</span>
+						</motion.div>
 						<motion.p
-							className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl"
+							className="mt-2 text-4xl font-bold text-white"
 							variants={fadeIn}
 						>
-							Make informed decisions with our unique approach
+							Make Informed Decisions
+						</motion.p>
+						<motion.p
+							className="mt-4 text-gray-400 max-w-2xl mx-auto"
+							variants={fadeIn}
+						>
+							Everything you need to find and compare the best AI tools for your projects
 						</motion.p>
 					</div>
 
 					<motion.div
-						className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16"
+						className="grid grid-cols-1 md:grid-cols-3 gap-8"
 						variants={staggerContainer}
 					>
-						<motion.div
-							className="relative p-6 bg-[#1A1625] border border-[#2A2438] rounded-2xl shadow-sm"
-							variants={fadeIn}
-							whileHover={{ y: -5 }}
-						>
-							<div className="h-12 w-12 rounded-xl bg-blue-100 dark:bg-blue-900 flex items-center justify-center mb-4">
-								<svg
-									className="h-6 w-6 text-blue-600 dark:text-blue-400"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-									></path>
-								</svg>
-							</div>
-							<h3 className="text-xl font-bold text-gray-900 dark:text-white">
-								Detailed Metrics
-							</h3>
-							<p className="mt-4 text-gray-300 dark:text-gray-300">
-								Compare AI tools across 50+ standardized metrics to find the
-								perfect match for your specific requirements.
-							</p>
-						</motion.div>
-
-						<motion.div
-							className="relative p-6 bg-[#1A1625] border border-[#2A2438] rounded-2xl shadow-sm"
-							variants={fadeIn}
-							whileHover={{ y: -5 }}
-						>
-							<div className="h-12 w-12 rounded-xl bg-blue-100 dark:bg-blue-900 flex items-center justify-center mb-4">
-								<svg
-									className="h-6 w-6 text-blue-600 dark:text-blue-400"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-									></path>
-								</svg>
-							</div>
-							<h3 className="text-xl font-bold text-gray-900 dark:text-white">
-								Real-time Updates
-							</h3>
-							<p className="mt-4 text-gray-300 dark:text-gray-300">
-								Our data is constantly updated to reflect the latest features,
-								pricing changes, and performance benchmarks.
-							</p>
-						</motion.div>
-
-						<motion.div
-							className="relative p-6 bg-[#1A1625] border border-[#2A2438] rounded-2xl shadow-sm"
-							variants={fadeIn}
-							whileHover={{ y: -5 }}
-						>
-							<div className="h-12 w-12 rounded-xl bg-blue-100 dark:bg-blue-900 flex items-center justify-center mb-4">
-								<svg
-									className="h-6 w-6 text-blue-600 dark:text-blue-400"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-									></path>
-								</svg>
-							</div>
-							<h3 className="text-xl font-bold text-gray-900 dark:text-white">
-								Community Insights
-							</h3>
-							<p className="mt-4 text-gray-300 dark:text-gray-300">
-								Benefit from thousands of verified user reviews and expert analysis
-								to get beyond the marketing claims.
-							</p>
-						</motion.div>
+						{[
+							{
+								icon: IconChartBar,
+								title: 'Detailed Metrics',
+								description: 'Compare AI tools across 50+ standardized metrics including performance, pricing, features, and user ratings.',
+								color: 'from-blue-500 to-cyan-500'
+							},
+							{
+								icon: IconTrendingUp,
+								title: 'Real-time Updates',
+								description: 'Stay current with the latest features, pricing changes, and performance benchmarks updated daily.',
+								color: 'from-purple-500 to-pink-500'
+							},
+							{
+								icon: IconUsers,
+								title: 'Community Insights',
+								description: 'Access thousands of verified user reviews and expert analysis to see beyond marketing claims.',
+								color: 'from-yellow-500 to-orange-500'
+							}
+						].map((feature, index) => (
+							<motion.div
+								key={index}
+								className="relative p-8 bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl shadow-lg hover:shadow-xl hover:border-purple-500/50 transition-all duration-300"
+								variants={fadeIn}
+								whileHover={{ y: -8 }}
+							>
+								<div className={`h-14 w-14 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 shadow-lg`}>
+									<feature.icon className="h-7 w-7 text-white" />
+								</div>
+								<h3 className="text-xl font-bold text-white mb-3">
+									{feature.title}
+								</h3>
+								<p className="text-gray-300 leading-relaxed">
+									{feature.description}
+								</p>
+							</motion.div>
+						))}
 					</motion.div>
 				</motion.div>
 			</section>
 
 			{/* CTA Section */}
-			<section className="py-16 px-6 lg:px-8">
+			<section className="py-20 px-6 lg:px-8">
 				<motion.div
-					className="mx-auto max-w-6xl"
+					className="mx-auto max-w-5xl"
 					initial="hidden"
 					whileInView="visible"
 					viewport={{ once: true }}
 					variants={fadeIn}
 				>
-					<div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-500 to-teal-600">
-						<div className="absolute inset-0 mix-blend-multiply opacity-20 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
-						<div className="relative px-6 py-16 sm:px-12 sm:py-20 lg:py-24 lg:px-16">
-							<div className="mx-auto max-w-2xl text-center">
-								<h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-									Find your perfect AI match today
+					<div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 p-12 shadow-2xl">
+						<div className="absolute inset-0 bg-black/20"></div>
+						<div className="relative text-center">
+							<motion.div
+								initial={{ scale: 0.9, opacity: 0 }}
+								animate={{ scale: 1, opacity: 1 }}
+								transition={{ delay: 0.2 }}
+							>
+								<IconRocket className="w-16 h-16 text-white mx-auto mb-6" />
+								<h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl mb-6">
+									Find Your Perfect AI Match Today
 								</h2>
-								<p className="mt-6 text-lg leading-8 text-indigo-100">
-									Join thousands of professionals who use AI Compass to make
-									better technology decisions.
+								<p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+									Join thousands of professionals who use AI Compass to discover and compare the best AI tools.
 								</p>
-								<div className="mt-10 flex items-center justify-center gap-x-6">
+								<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
 									<motion.div
 										whileHover={{ scale: 1.05 }}
 										whileTap={{ scale: 0.95 }}
 									>
 										<Link
 											href="/signup"
-											className="rounded-xl bg-white px-8 py-3.5 text-sm font-semibold text-blue-600 shadow-sm hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-all"
+											className="px-8 py-4 rounded-xl bg-white text-purple-600 text-base font-bold shadow-lg hover:shadow-xl hover:bg-gray-100 transition-all"
 										>
-											Create free account
+											Create Free Account
+										</Link>
+									</motion.div>
+									<motion.div
+										whileHover={{ scale: 1.05 }}
+										whileTap={{ scale: 0.95 }}
+									>
+										<Link
+											href="/browse-tools"
+											className="px-8 py-4 rounded-xl bg-white/10 backdrop-blur-sm border-2 border-white text-white text-base font-bold hover:bg-white/20 transition-all"
+										>
+											Explore Tools
 										</Link>
 									</motion.div>
 								</div>
-							</div>
+							</motion.div>
 						</div>
 					</div>
 				</motion.div>
 			</section>
+
+			{/* Footer */}
+			<footer className="border-t border-gray-800/50 py-12 px-6 lg:px-8">
+				<div className="max-w-7xl mx-auto text-center">
+					<div className="flex items-center justify-center gap-2 mb-4">
+						<div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+							<IconBrandOpenai className="w-5 h-5 text-white" />
+						</div>
+						<span className="text-xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+							AI Compass
+						</span>
+					</div>
+					<p className="text-gray-400 text-sm">
+						© 2025 AI Compass. Your trusted guide to AI tools.
+					</p>
+				</div>
+			</footer>
 		</div>
 	)
 }

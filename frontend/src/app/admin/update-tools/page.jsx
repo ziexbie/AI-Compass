@@ -9,57 +9,50 @@ import StarRating from '@/components/StarRating';
 import { jwtDecode } from 'jwt-decode';
 
 const UpdateTools = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [logoPreview, setLogoPreview] = useState(null);
+  const [currentLogoUrl, setCurrentLogoUrl] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const toolId = searchParams.get('id');
 
-  const [admin, setAdmin] = useState(null);
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error('Authentication required');
+          router.push('/login');
+          return;
+        }
 
-     
-     useEffect(() => {
-        const fetchAdminData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    toast.error('Authentication required');
-                    router.push('/login');
-                    return;
-                }
+        // Decode token to get admin ID
+        const decodedToken = jwtDecode(token);
 
-                // Decode token to get admin ID
-                const decodedToken = jwtDecode(token);
-                const adminId = decodedToken._id;
+        // Check if user has admin role
+        if (decodedToken.role !== 'admin') {
+          toast.error('Unauthorized: Admin access only');
+          router.push('/login');
+          return;
+        }
 
-                // Check if user has admin role
-                if (decodedToken.role !== 'admin') {
-                    toast.error('Unauthorized: Admin access only');
-                    router.push('/login');
-                    return;
-                }
+      } catch (error) {
+        console.error('Error fetching admin data:', error);
+        toast.error('Failed to load admin profile data');
+        router.push('/login');
+      }
+    };
 
-                // Fetch admin user data
-                const adminResponse = await axios.get(`http://localhost:5000/user/getbyid/${adminId}`);
-                setAdmin(adminResponse.data);
-
-            } catch (error) {
-                console.error('Error fetching admin data:', error);
-                toast.error('Failed to load admin profile data');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAdminData();
-    }, [router]);
+    fetchAdminData();
+  }, [router]);
 
   useEffect(() => {
     const fetchTool = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`http://localhost:5000/tool/getbyid/${toolId}`);
         const toolData = response.data;
-        
+
         // Set form values
         toolForm.setValues({
           name: toolData.name || '',
@@ -96,21 +89,24 @@ const UpdateTools = () => {
           logo: null
         });
 
-        // Set logo preview if exists
+        // Set logo preview and store current logo URL
         if (toolData.logo) {
           setLogoPreview(toolData.logo);
+          setCurrentLogoUrl(toolData.logo);
         }
       } catch (error) {
         console.error('Error fetching tool:', error);
         toast.error('Failed to fetch tool data');
         router.push('/admin/manage-tools');
+      } finally {
+        setLoading(false);
       }
     };
 
     if (toolId) {
       fetchTool();
     }
-  }, [toolId]);
+  }, [toolId, router]);
 
   const handleFileChange = (event) => {
     const file = event.currentTarget.files[0];
@@ -178,7 +174,7 @@ const UpdateTools = () => {
       }),
       api: Yup.object({
         available: Yup.boolean(),
-        documentation: Yup.string().when('available', (available, schema) =>
+        documentation: Yup.string().when('available', ([available], schema) =>
           available
             ? schema.url('Must be a valid URL').required('Documentation URL is required')
             : schema.notRequired()
@@ -188,7 +184,7 @@ const UpdateTools = () => {
     onSubmit: async (values) => {
       try {
         setLoading(true);
-        let logoUrl = values.logo;
+        let logoUrl = currentLogoUrl; // Use existing logo URL by default
 
         // Handle new logo upload if file is selected
         if (values.logo instanceof File) {
@@ -220,7 +216,7 @@ const UpdateTools = () => {
 
         // Update the tool
         const response = await axios.put(`http://localhost:5000/tool/update/${toolId}`, toolData);
-        
+
         if (response.status === 200) {
           toast.success('Tool updated successfully');
           router.push('/admin/manage-tools');
@@ -242,12 +238,20 @@ const UpdateTools = () => {
     }
   };
 
+  console.log('Upload Preset:', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+  console.log('Cloud Name:', process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-pink-300 mb-10">Update AI Tool</h1>
-        
-        <form onSubmit={toolForm.handleSubmit} className="space-y-6 bg-gray-800 p-8 rounded-xl shadow-lg border border-pink-300/20">
+
+        {loading ? (
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="text-pink-300 text-xl">Loading tool data...</div>
+          </div>
+        ) : (
+          <form onSubmit={toolForm.handleSubmit} className="space-y-6 bg-gray-800 p-8 rounded-xl shadow-lg border border-pink-300/20">
           {/* Basic Information */}
           <div className="space-y-6">
             <div>
@@ -541,6 +545,7 @@ const UpdateTools = () => {
             </button>
           </div>
         </form>
+        )}
       </div>
     </div>
   );

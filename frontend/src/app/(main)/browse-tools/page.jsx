@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import { IconSearch, IconFilter } from '@tabler/icons-react';
+import { IconSearch, IconFilter, IconStar, IconCurrencyDollar, IconClock, IconSparkles, IconTrendingUp } from '@tabler/icons-react';
 import Link from 'next/link';
 
 const BrowseTools = () => {
@@ -68,7 +68,7 @@ const BrowseTools = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div
@@ -76,119 +76,259 @@ const BrowseTools = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl font-bold text-white sm:text-5xl mb-4">
-            Browse <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">AI Tools</span>
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-full px-4 py-2 mb-6">
+            <IconSparkles className="w-5 h-5 text-pink-400" />
+            <span className="text-pink-300 text-sm font-semibold">Discover AI Tools</span>
+          </div>
+          <h1 className="text-5xl font-bold text-white sm:text-6xl mb-4">
+            Browse <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400">AI Tools</span>
           </h1>
-          <p className="text-gray-300 text-lg">
-            Find the perfect AI tool for your specific needs
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            Explore our curated collection of cutting-edge AI tools to supercharge your productivity
           </p>
         </motion.div>
 
+        {/* Stats Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto"
+        >
+          <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-white mb-1">{tools.length}</div>
+            <div className="text-gray-400 text-sm">Total Tools</div>
+          </div>
+          <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-pink-400 mb-1">{filteredTools.length}</div>
+            <div className="text-gray-400 text-sm">Matching Results</div>
+          </div>
+          <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-purple-400 mb-1">{categories.length - 1}</div>
+            <div className="text-gray-400 text-sm">Categories</div>
+          </div>
+        </motion.div>
+
         {/* Search and Filter Section */}
-        <div className="mb-12 space-y-6">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="mb-12 space-y-6"
+        >
           {/* Search Bar */}
-          <div className="relative max-w-2xl mx-auto">
-            <IconSearch className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+          <div className="relative max-w-3xl mx-auto">
+            <IconSearch className="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
             <input
               type="text"
-              placeholder="Search AI tools..."
+              placeholder="Search for AI tools by name or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-gray-800 border-none rounded-xl text-white placeholder-gray-400 "
+              className="w-full pl-14 pr-4 py-4 bg-gray-800/50 border-2 border-gray-700 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all text-lg"
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+              >
+                ✕
+              </button>
+            )}
           </div>
 
           {/* Categories */}
-          <div className="flex flex-wrap justify-center gap-3">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => handleCategorySelect(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all
-                  ${selectedCategory === category.id
-                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                  }`}
-              >
-                {category.name}
-              </button>
-            ))}
+          <div>
+            <div className="flex items-center gap-2 mb-4 justify-center">
+              <IconFilter className="w-5 h-5 text-gray-400" />
+              <span className="text-gray-400 text-sm font-medium">Filter by Category</span>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              {categories.map((category) => (
+                <motion.button
+                  key={category.id}
+                  onClick={() => handleCategorySelect(category.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-lg
+                    ${selectedCategory === category.id
+                      ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-pink-500/50'
+                      : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-gray-700'
+                    }`}
+                >
+                  {category.name}
+                </motion.button>
+              ))}
+            </div>
           </div>
 
           {/* Price Filters */}
-          <div className="flex justify-center gap-4">
-            {['free', 'paid', 'trial'].map((type) => (
-              <label key={type} className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={filters[type]}
-                  onChange={() => setFilters(prev => ({ ...prev, [type]: !prev[type] }))}
-                  className="rounded border-gray-600 text-pink-500 focus:ring-pink-500 bg-gray-700"
-                />
-                <span className="text-gray-300 capitalize">{type}</span>
-              </label>
-            ))}
+          <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 max-w-2xl mx-auto">
+            <div className="flex items-center gap-2 mb-4">
+              <IconCurrencyDollar className="w-5 h-5 text-green-400" />
+              <span className="text-white font-semibold">Pricing Options</span>
+            </div>
+            <div className="flex flex-wrap justify-center gap-6">
+              {[
+                { key: 'free', label: 'Free', color: 'green' },
+                { key: 'paid', label: 'Paid', color: 'blue' },
+                { key: 'trial', label: 'Free Trial', color: 'purple' }
+              ].map((type) => (
+                <label key={type.key} className="flex items-center space-x-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={filters[type.key]}
+                    onChange={() => setFilters(prev => ({ ...prev, [type.key]: !prev[type.key] }))}
+                    className="w-5 h-5 rounded border-gray-600 text-pink-500 focus:ring-pink-500 focus:ring-offset-gray-800 bg-gray-700"
+                  />
+                  <span className={`text-gray-300 font-medium group-hover:text-${type.color}-400 transition-colors`}>
+                    {type.label}
+                  </span>
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Tools Grid */}
         {loading ? (
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-pink-500 mb-4"></div>
+            <p className="text-xl text-gray-400">Loading amazing AI tools...</p>
           </div>
+        ) : filteredTools.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-20"
+          >
+            <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-12 max-w-md mx-auto">
+              <IconSearch className="w-20 h-20 text-gray-600 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-white mb-2">No Tools Found</h3>
+              <p className="text-gray-400 mb-6">
+                We couldn't find any tools matching your criteria
+              </p>
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedCategory('all');
+                  setFilters({ free: false, paid: false, trial: false });
+                }}
+                className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl hover:from-pink-600 hover:to-purple-700 transition-all font-semibold"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          </motion.div>
         ) : (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {filteredTools.map((tool) => (
+            {filteredTools.map((tool, index) => (
               <motion.div
                 key={tool._id}
-                whileHover={{ y: -5 }}
-                className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-pink-500/50 transition-all"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="group bg-gray-800/30 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700/50 hover:border-pink-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-pink-500/20"
               >
-                <div className="relative w-full h-48">
+                {/* Tool Image */}
+                <div className="relative w-full h-56 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
                   {tool.logo ? (
                     <img
                       src={tool.logo}
                       alt={tool.name}
-                      className="w-full h-full object-contain bg-gray-900 p-4"
+                      className="w-full h-full object-contain p-6 group-hover:scale-110 transition-transform duration-300"
                       onError={(e) => {
                         e.target.onError = null;
-                        // Create a fallback div with the first letter of the tool name
                         const parent = e.target.parentElement;
                         const fallback = document.createElement('div');
-                        fallback.className = 'w-full h-full bg-gray-900 flex items-center justify-center';
-                        fallback.innerHTML = `<span class="text-4xl font-bold text-pink-300">${tool.name.charAt(0)}</span>`;
+                        fallback.className = 'w-full h-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center';
+                        fallback.innerHTML = `<span class="text-6xl font-bold text-white">${tool.name.charAt(0)}</span>`;
                         parent.replaceChild(fallback, e.target);
                       }}
                     />
                   ) : (
-                    <div className="w-full h-full bg-gray-900 flex items-center justify-center">
-                      <span className="text-4xl font-bold text-pink-300">{tool.name.charAt(0)}</span>
+                    <div className="w-full h-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+                      <span className="text-6xl font-bold text-white">{tool.name.charAt(0)}</span>
                     </div>
                   )}
-                </div>
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-bold text-white">{tool.name}</h3>
+                  
+                  {/* Badge Overlay */}
+                  <div className="absolute top-4 right-4 flex flex-col gap-2">
+                    {tool.pricing?.free && (
+                      <span className="px-3 py-1 bg-green-500/90 backdrop-blur-sm text-white rounded-full text-xs font-bold shadow-lg">
+                        FREE
+                      </span>
+                    )}
+                    {tool.pricing?.trial && (
+                      <span className="px-3 py-1 bg-blue-500/90 backdrop-blur-sm text-white rounded-full text-xs font-bold shadow-lg">
+                        TRIAL
+                      </span>
+                    )}
                   </div>
-                  <p className="text-gray-400 mb-4 line-clamp-2">{tool.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="px-3 py-1 bg-gray-700 rounded-full text-sm text-gray-300">
+                </div>
+
+                {/* Tool Content */}
+                <div className="p-6">
+                  <div className="mb-3">
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">
+                      {tool.name}
+                    </h3>
+                    <span className="inline-block px-3 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded-full text-xs font-semibold">
                       {tool.category}
                     </span>
-                    <Link
-                      href={`/tool-detail/${tool._id}`}
-                      className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all"
-                    >
-                      View Details
-                    </Link>
                   </div>
+                  
+                  <p className="text-gray-400 mb-6 line-clamp-3 text-sm leading-relaxed">
+                    {tool.description}
+                  </p>
+
+                  {/* Features Preview */}
+                  {tool.features && tool.features.length > 0 && (
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      {tool.features.slice(0, 3).map((feature, idx) => (
+                        <span key={idx} className="px-2 py-1 bg-gray-700/50 text-gray-300 rounded text-xs">
+                          {feature}
+                        </span>
+                      ))}
+                      {tool.features.length > 3 && (
+                        <span className="px-2 py-1 bg-gray-700/50 text-gray-300 rounded text-xs">
+                          +{tool.features.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* CTA Button */}
+                  <Link
+                    href={`/tool-detail/${tool._id}`}
+                    className="block w-full text-center px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl hover:from-pink-600 hover:to-purple-700 transition-all font-semibold shadow-lg hover:shadow-pink-500/50 transform group-hover:scale-105"
+                  >
+                    View Details →
+                  </Link>
                 </div>
               </motion.div>
             ))}
+          </motion.div>
+        )}
+
+        {/* Results Summary */}
+        {!loading && filteredTools.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-12 text-center"
+          >
+            <div className="inline-flex items-center gap-2 bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-full px-6 py-3">
+              <IconTrendingUp className="w-5 h-5 text-pink-400" />
+              <span className="text-gray-300">
+                Showing <span className="text-white font-semibold">{filteredTools.length}</span> of{' '}
+                <span className="text-white font-semibold">{tools.length}</span> tools
+              </span>
+            </div>
           </motion.div>
         )}
       </div>

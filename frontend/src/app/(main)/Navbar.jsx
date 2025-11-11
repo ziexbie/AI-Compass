@@ -49,7 +49,7 @@ const Navbar = () => {
                                 Explore
                             </Link>
                             <Link
-                                href="/compare-tools"
+                                href="/user/compare-tools"
                                 className="px-3 py-2 rounded-md text-sm font-medium text-gray-200 hover:text-indigo-400 transition-colors"
                             >
                                 Compare
